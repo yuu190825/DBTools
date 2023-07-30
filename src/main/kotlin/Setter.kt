@@ -1,11 +1,11 @@
 import java.util.*
 
-// Main_Config
+// Main Config
 private const val DEFAULT_RECORD: Short = 5000
 
 class Setter {
 
-    // Set_Value
+    // Set Value
     var mode: Byte = 0
     var dbName = ""
     var record: Short = 0

@@ -7,13 +7,13 @@ import java.util.logging.Logger
 class CsvFileWriter(tabName: String, notInDBA: MutableList<MutableList<Any?>>, addInDBA: MutableList<MutableList<Any?>>,
                     xorInDBA: MutableList<MutableList<Any?>>) {
 
-    // Parameter_Value
+    // Parameter Value
     private val tabName: String
     private val notInDBA: MutableList<MutableList<Any?>>
     private val addInDBA: MutableList<MutableList<Any?>>
     private val xorInDBA: MutableList<MutableList<Any?>>
 
-    // Init_Value
+    // Init Value
     private val logger: Logger
 
     init {
@@ -27,7 +27,7 @@ class CsvFileWriter(tabName: String, notInDBA: MutableList<MutableList<Any?>>, a
 
     fun go() {
 
-        // BufferedWriter_Init
+        // BufferedWriter Init
         var bw: BufferedWriter? = null
 
         try {

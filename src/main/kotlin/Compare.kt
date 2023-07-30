@@ -1,10 +1,10 @@
 class Compare(colValueListsA: MutableList<MutableList<Any?>>, colValueListsB: MutableList<MutableList<Any?>>) {
 
-    // Parameter_Value
+    // Parameter Value
     private val colValueListsA: MutableList<MutableList<Any?>>
     private val colValueListsB: MutableList<MutableList<Any?>>
 
-    // Data_Value
+    // Data Value
     val notInDBA = mutableListOf<MutableList<Any?>>()
     val addInDBA = mutableListOf<MutableList<Any?>>()
     val xorInDBA = mutableListOf<MutableList<Any?>>()

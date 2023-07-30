@@ -5,7 +5,7 @@ import java.sql.Statement
 import java.util.logging.Level
 import java.util.logging.Logger
 
-// SQL_Config from SQL Server
+// SQL Config from SQL Server
 private const val MS_JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
 private const val MS_DB_URL = "jdbc:sqlserver://0.0.0.0:1433;encrypt=false;databaseName="
 private const val MS_USER = "test"
@@ -13,11 +13,11 @@ private const val MS_PASS = "test"
 
 class InsertInto(dbName: String, sqlStringList: MutableList<String>): Thread() {
 
-    // Parameter_Value
+    // Parameter Value
     private val dbName: String
     private val sqlStringList: MutableList<String>
 
-    // Init_Value
+    // Init Value
     private val logger: Logger
 
     init {
@@ -29,7 +29,7 @@ class InsertInto(dbName: String, sqlStringList: MutableList<String>): Thread() {
 
     override fun run() {
 
-        // SQL_Init
+        // SQL Init
         var conn: Connection? = null
         var stmt: Statement? = null
 

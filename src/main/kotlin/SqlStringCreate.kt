@@ -1,12 +1,12 @@
 class SqlStringCreate(tbName: String, clNameList: MutableList<String>,
                       clValueLists: MutableList<MutableList<Any?>>): Thread() {
 
-    // Parameter_Value
+    // Parameter Value
     private val tabName: String
     private val colNameList: MutableList<String>
     private val colValueLists: MutableList<MutableList<Any?>>
 
-    // Data_Value
+    // Data Value
     val sqlStringList = mutableListOf<String>()
 
     init {

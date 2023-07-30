@@ -1,8 +1,8 @@
 // SQL Query in Oracle DB(1)
 private const val SELECT_COLUMN_NAME_IN_ORACLE_DB = "SELECT COLUMN_NAME FROM ALL_TAB_COLUMNS WHERE TABLE_NAME ="
 private const val ORDER_BY_COLUMN_ID_IN_ORACLE_DB = "ORDER BY COLUMN_ID"
-private const val SELECT_ONE_IN_ORACLE_DB_1 = "SELECT * FROM"
-private const val SELECT_ONE_IN_ORACLE_DB_2 = "LIMIT 1"
+private const val SELECT_ONE_IN_ORACLE_DB = "SELECT * FROM"
+private const val SELECT_ONE_LIMIT_IN_ORACLE_DB = "LIMIT 1"
 private const val SELECT_ALL_IN_ORACLE_DB = "SELECT * FROM (SELECT ROWNUM AS NUM, * FROM"
 private const val SELECT_ALL_FROM_IN_ORACLE_DB = "WHERE NUM >="
 private const val SELECT_ALL_TO_IN_ORACLE_DB = "AND NUM <="
@@ -24,7 +24,7 @@ class SqlQuery {
     }
 
     fun getSelectOneQuery(type: Byte, tabName: String): String {
-        return if (type.toInt() == 1) "$SELECT_ONE_IN_ORACLE_DB_1 $tabName $SELECT_ONE_IN_ORACLE_DB_2"
+        return if (type.toInt() == 1) "$SELECT_ONE_IN_ORACLE_DB $tabName $SELECT_ONE_LIMIT_IN_ORACLE_DB"
         else "$SELECT_ONE_IN_SQL_SERVER $tabName"
     }
 

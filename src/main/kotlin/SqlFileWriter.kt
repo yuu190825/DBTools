@@ -7,14 +7,14 @@ import java.util.logging.Logger
 class SqlFileWriter(tbName: String, from: Long, to: Long, fileNumber: Int,
                     sqlStringList: MutableList<String>): Thread() {
 
-    // Parameter_Value
+    // Parameter Value
     private val tabName: String
     private val from: Long
     private val to: Long
     private val fileNumber: Int
     private val sqlStringList: MutableList<String>
 
-    // Init_Value
+    // Init Value
     private val logger: Logger
 
     init {
@@ -29,7 +29,7 @@ class SqlFileWriter(tbName: String, from: Long, to: Long, fileNumber: Int,
 
     override fun run() {
 
-        // BufferedWriter_Init
+        // BufferedWriter Init
         var bw: BufferedWriter? = null
 
         try {
