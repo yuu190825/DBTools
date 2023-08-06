@@ -14,8 +14,7 @@ class CsvFileWriter(dbName: String, tabName: String, notInDBA: MutableList<Mutab
     private val addInDBA: MutableList<MutableList<Any?>>
     private val xorInDBA: MutableList<MutableList<Any?>>
 
-    // Init Value
-    private val logger = Logger.getLogger(CsvFileWriter::class.qualifiedName)
+    private val logger = Logger.getLogger(CsvFileWriter::class.qualifiedName) // Init Value
 
     init {
         this.dbName = dbName
@@ -27,8 +26,7 @@ class CsvFileWriter(dbName: String, tabName: String, notInDBA: MutableList<Mutab
 
     fun start() {
 
-        // BufferedWriter Init
-        var bw: BufferedWriter? = null
+        var bw: BufferedWriter? = null // BufferedWriter Init
 
         try {
 

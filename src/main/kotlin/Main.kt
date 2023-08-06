@@ -5,8 +5,7 @@ import java.awt.event.ActionListener
 private const val DEFAULT_RECORD: Short = 5000
 private const val MAX: Long = 500000
 
-// Window Init
-private val window = Window()
+private val window = Window() // Window Init
 
 fun main() {
     StartButton().init()
@@ -43,12 +42,10 @@ private class Start {
                 var to: Long = MAX
 
                 while (from <= total) {
-                    val execute = Execute(
-                        window.fromDbType, window.fromDbUrl.text, window.fromDbName.text,
+                    val execute = Execute(window.fromDbType, window.fromDbUrl.text, window.fromDbName.text,
                         window.fromDbUser.text, String(window.fromDbPass.password), window.toDbType,
                         window.toDbUrl.text, window.toDbName.text, window.toDbUser.text,
-                        String(window.toDbPass.password), window.func, record, tabName, from, to
-                    )
+                        String(window.toDbPass.password), window.func, record, tabName, from, to)
 
                     execute.start(window.mode)
 

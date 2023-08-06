@@ -90,19 +90,15 @@ class Select(dbType: Byte, dbUrl: String, dbName: String, dbUser: String, dbPass
                 val colValueList = mutableListOf<Any?>()
                 for (colName in colNameList) {
                     if (func.toInt() == 1) {
-                        try { colValueList.add(rs.getTimestamp(colName))
-                        } catch (e: Exception) {
-
-                            // '
-                            colValueList.add(rs.getString(colName).replace("'", "''"))
-                            // End
-
+                        try { colValueList.add(rs.getTimestamp(colName)) }
+                        catch (e: Exception) {
+                            colValueList.add(rs.getString(colName).replace("'", "''")) // '
                         }
                     } else {
                         if (rs.getObject(colName) == null) colValueList.add("NULL")
                         else {
-                            try { colValueList.add(rs.getTimestamp(colName))
-                            } catch (e: Exception) { colValueList.add(rs.getString(colName)) }
+                            try { colValueList.add(rs.getTimestamp(colName)) }
+                            catch (e: Exception) { colValueList.add(rs.getString(colName)) }
                         }
                     }
                 }

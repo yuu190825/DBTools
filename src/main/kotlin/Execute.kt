@@ -22,8 +22,7 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
     private val from: Long
     private val to: Long
 
-    // Init Value
-    private val logger = Logger.getLogger(Execute::class.qualifiedName)
+    private val logger = Logger.getLogger(Execute::class.qualifiedName) // Init Value
 
     // Data Value
     val colValueListsA = mutableListOf<MutableList<Any?>>()
@@ -76,6 +75,7 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
         // End
 
         if (func.toInt() == 1) {
+
             // SqlStringCreate
             print("Running SqlStringCreate...")
             for (clValuePackage in selectA.colValuePackages)
@@ -85,11 +85,8 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
 
             println("...")
             for (sqlStringCreateThread in sqlStringCreateList) {
-                try {
-                    sqlStringCreateThread.join()
-                } catch (ie: InterruptedException) {
-                    logger.log(Level.SEVERE, ie.toString())
-                }
+                try { sqlStringCreateThread.join() }
+                catch (ie: InterruptedException) { logger.log(Level.SEVERE, ie.toString()) }
 
                 sqlStringPackages.add(sqlStringCreateThread.sqlStringList)
             }
@@ -107,11 +104,8 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
 
                 println("...")
                 for (insertIntoThread in insertIntoList) {
-                    try {
-                        insertIntoThread.join()
-                    } catch (ie: InterruptedException) {
-                        logger.log(Level.SEVERE, ie.toString())
-                    }
+                    try { insertIntoThread.join() }
+                    catch (ie: InterruptedException) { logger.log(Level.SEVERE, ie.toString()) }
                 }
                 // Ene
 
@@ -126,11 +120,8 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
 
                 println("...")
                 for (sqlFileWriterThread in sqlFileWriterList) {
-                    try {
-                        sqlFileWriterThread.join()
-                    } catch (ie: InterruptedException) {
-                        logger.log(Level.SEVERE, ie.toString())
-                    }
+                    try { sqlFileWriterThread.join() }
+                    catch (ie: InterruptedException) { logger.log(Level.SEVERE, ie.toString()) }
                 }
                 // End
 

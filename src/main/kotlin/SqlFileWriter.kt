@@ -14,8 +14,7 @@ class SqlFileWriter(tbName: String, from: Long, to: Long, fileNumber: Int,
     private val fileNumber: Int
     private val sqlStringList: MutableList<String>
 
-    // Init Value
-    private val logger = Logger.getLogger(SqlFileWriter::class.qualifiedName)
+    private val logger = Logger.getLogger(SqlFileWriter::class.qualifiedName) // Init Value
 
     init {
         this.tabName = tbName
@@ -27,8 +26,7 @@ class SqlFileWriter(tbName: String, from: Long, to: Long, fileNumber: Int,
 
     override fun run() {
 
-        // BufferedWriter Init
-        var bw: BufferedWriter? = null
+        var bw: BufferedWriter? = null // BufferedWriter Init
 
         try {
 

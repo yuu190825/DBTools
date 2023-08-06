@@ -341,6 +341,7 @@ class Window {
                 "Add" -> tabNameList.add(tabName.text)
                 "Remove" -> tabNameList.remove(tabName.text)
             }
+
             println("Table Name List: $tabNameList")
         }
     }

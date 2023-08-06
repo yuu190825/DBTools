@@ -6,8 +6,7 @@ class SqlStringCreate(tbName: String, clNameList: MutableList<String>,
     private val colNameList: MutableList<String>
     private val colValueLists: MutableList<MutableList<Any?>>
 
-    // Data Value
-    val sqlStringList = mutableListOf<String>()
+    val sqlStringList = mutableListOf<String>() // Data Value
 
     init {
         this.tabName = tbName
