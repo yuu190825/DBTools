@@ -72,10 +72,8 @@ class Select(dbType: Byte, dbUrl: String, dbName: String, dbUser: String, dbPass
 
             while (rs.next()) {
                 val metadata = rs.metaData
-                for (i in 1 .. metadata.columnCount)
-                    if (metadata.getColumnTypeName(i).equals("BLOB") ||
-                        metadata.getColumnTypeName(i).equals("CLOB"))
-                        toDeleteColNameList.add(metadata.getColumnName(i))
+                for (i in 1 .. metadata.columnCount) if (metadata.getColumnTypeName(i).equals("BLOB") ||
+                    metadata.getColumnTypeName(i).equals("CLOB")) toDeleteColNameList.add(metadata.getColumnName(i))
             }
 
             for (colName in toDeleteColNameList) colNameList.remove(colName)
@@ -92,8 +90,7 @@ class Select(dbType: Byte, dbUrl: String, dbName: String, dbUser: String, dbPass
                     if (func.toInt() == 1) {
                         try { colValueList.add(rs.getTimestamp(colName)) }
                         catch (e: Exception) {
-                            colValueList.add(rs.getString(colName).replace("'", "''")) // '
-                        }
+                            colValueList.add(rs.getString(colName).replace("'", "''")) } // '
                     } else {
                         if (rs.getObject(colName) == null) colValueList.add("NULL")
                         else {

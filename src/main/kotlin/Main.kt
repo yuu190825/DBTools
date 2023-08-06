@@ -13,15 +13,9 @@ fun main() {
 }
 
 private class StartButton {
-    fun init() {
-        window.btnStart.addActionListener(Click())
-    }
+    fun init() { window.btnStart.addActionListener(Click()) }
 
-    private inner class Click: ActionListener {
-        override fun actionPerformed(e: ActionEvent?) {
-            Start().start()
-        }
-    }
+    private inner class Click: ActionListener { override fun actionPerformed(e: ActionEvent?) { Start().start() } }
 }
 
 private class Start {

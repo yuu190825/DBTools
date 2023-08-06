@@ -64,8 +64,8 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
         selectA.start()
         if (func.toInt() == 2) selectB.start()
 
-        if (func.toInt() == 1) try { selectA.join() } catch (ie: InterruptedException) {
-            logger.log(Level.SEVERE, ie.toString()) }
+        if (func.toInt() == 1) try { selectA.join() }
+        catch (ie: InterruptedException) { logger.log(Level.SEVERE, ie.toString()) }
         else {
             try {
                 selectA.join()
@@ -96,9 +96,8 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
 
                 // InsertInto
                 print("Running InsertInto...")
-                for (sqlStringListPackage in sqlStringPackages)
-                    insertIntoList.add(InsertInto(toDbType, toDbUrl, toDbName, toDbUser, toDbPass,
-                        sqlStringListPackage))
+                for (sqlStringListPackage in sqlStringPackages) insertIntoList.add(InsertInto(toDbType, toDbUrl,
+                    toDbName, toDbUser, toDbPass, sqlStringListPackage))
 
                 for (insertIntoThread in insertIntoList) insertIntoThread.start()
 
