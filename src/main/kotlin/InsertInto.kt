@@ -5,26 +5,28 @@ import java.sql.Statement
 import java.util.logging.Level
 import java.util.logging.Logger
 
-// SQL Config from SQL Server
-private const val MS_JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-private const val MS_DB_URL = "jdbc:sqlserver://0.0.0.0:1433;encrypt=false;databaseName="
-private const val MS_USER = "test"
-private const val MS_PASS = "test"
-
-class InsertInto(dbName: String, sqlStringList: MutableList<String>): Thread() {
+class InsertInto(dbType: Byte, dbUrl: String, dbName: String, dbUser: String, dbPass: String,
+                 sqlStringList: MutableList<String>): Thread() {
 
     // Parameter Value
+    private val dbType: Byte
+    private val dbUrl: String
     private val dbName: String
+    private val dbUser: String
+    private val dbPass: String
     private val sqlStringList: MutableList<String>
 
     // Init Value
-    private val logger: Logger
+    private val dbConfig = DbConfig()
+    private val logger = Logger.getLogger(InsertInto::class.qualifiedName)
 
     init {
+        this.dbType = dbType
+        this.dbUrl = dbUrl
         this.dbName = dbName
+        this.dbUser = dbUser
+        this.dbPass = dbPass
         this.sqlStringList = sqlStringList
-
-        logger = Logger.getLogger(InsertInto::class.qualifiedName)
     }
 
     override fun run() {
@@ -34,8 +36,8 @@ class InsertInto(dbName: String, sqlStringList: MutableList<String>): Thread() {
         var stmt: Statement? = null
 
         try {
-            Class.forName(MS_JDBC_DRIVER)
-            conn = DriverManager.getConnection(MS_DB_URL + dbName, MS_USER, MS_PASS)
+            Class.forName(dbConfig.getJdbcDriver(dbType))
+            conn = DriverManager.getConnection(dbConfig.getDbUrl(dbType, dbUrl, dbName), dbUser, dbPass)
             stmt = conn?.createStatement()
         } catch (e: Exception) { logger.log(Level.SEVERE, e.toString()) }
 

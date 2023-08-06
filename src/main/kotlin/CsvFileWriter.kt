@@ -4,28 +4,28 @@ import java.io.IOException
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class CsvFileWriter(tabName: String, notInDBA: MutableList<MutableList<Any?>>, addInDBA: MutableList<MutableList<Any?>>,
-                    xorInDBA: MutableList<MutableList<Any?>>) {
+class CsvFileWriter(dbName: String, tabName: String, notInDBA: MutableList<MutableList<Any?>>,
+                    addInDBA: MutableList<MutableList<Any?>>, xorInDBA: MutableList<MutableList<Any?>>) {
 
     // Parameter Value
+    private val dbName: String
     private val tabName: String
     private val notInDBA: MutableList<MutableList<Any?>>
     private val addInDBA: MutableList<MutableList<Any?>>
     private val xorInDBA: MutableList<MutableList<Any?>>
 
     // Init Value
-    private val logger: Logger
+    private val logger = Logger.getLogger(CsvFileWriter::class.qualifiedName)
 
     init {
+        this.dbName = dbName
         this.tabName = tabName
         this.notInDBA = notInDBA
         this.addInDBA = addInDBA
         this.xorInDBA = xorInDBA
-
-        logger = Logger.getLogger(CsvFileWriter::class.qualifiedName)
     }
 
-    fun go() {
+    fun start() {
 
         // BufferedWriter Init
         var bw: BufferedWriter? = null
@@ -35,24 +35,24 @@ class CsvFileWriter(tabName: String, notInDBA: MutableList<MutableList<Any?>>, a
             // Writer
             bw = BufferedWriter(FileWriter("$tabName.csv"))
 
-            bw.write("Not in test2:\n")
+            bw.write("Not in $dbName:\n")
             for (i in 0 ..< notInDBA.size) {
                 bw.write(notInDBA[i][0].toString())
-                for (j in 1..< notInDBA.size) bw.write(", ${notInDBA[i][j]}")
+                for (j in 1..< notInDBA[i].size) bw.write(", ${notInDBA[i][j].toString()}")
                 bw.newLine()
             }
 
-            bw.write("\nAdd in test2:\n")
+            bw.write("\nAdd in $dbName:\n")
             for (i in 0 ..< addInDBA.size) {
                 bw.write(addInDBA[i][0].toString())
-                for (j in 1..< addInDBA.size) bw.write(", ${addInDBA[i][j]}")
+                for (j in 1..< addInDBA[i].size) bw.write(", ${addInDBA[i][j].toString()}")
                 bw.newLine()
             }
 
-            bw.write("\nNot equal in test2:\n")
+            bw.write("\nNot equal in $dbName:\n")
             for (i in 0 ..< xorInDBA.size) {
                 bw.write(xorInDBA[i][0].toString())
-                for (j in 1..< xorInDBA.size) bw.write(", ${xorInDBA[i][j]}")
+                for (j in 1..< xorInDBA[i].size) bw.write(", ${xorInDBA[i][j].toString()}")
                 bw.newLine()
             }
             // End

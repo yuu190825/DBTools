@@ -17,13 +17,13 @@ class SqlStringCreate(tbName: String, clNameList: MutableList<String>,
 
     override fun run() {
         for (clValueList in colValueLists) {
-            val sqlString = StringBuilder("INSERT INTO [$tabName](${colNameList[0]}")
+            val sqlString = StringBuilder("INSERT INTO $tabName(${colNameList[0]}")
             for (i in 1 ..< colNameList.size) sqlString.append(", ${colNameList[i]}")
 
-            if (clValueList[0] == null) sqlString.append(") VALUES (NULL")
-            else sqlString.append(") VALUES ('${clValueList[0]}'")
+            if (clValueList[0] == null) sqlString.append(") VALUES(NULL")
+            else sqlString.append(") VALUES('${clValueList[0]}'")
             for (i in 1 ..< clValueList.size)
-                if (clValueList[i] == null) sqlString.append(", NULL") else sqlString.append(", 'clValueList[i]'")
+                if (clValueList[i] == null) sqlString.append(", NULL") else sqlString.append(", '${clValueList[i]}'")
 
             sqlStringList.add(sqlString.append(");").toString())
         }

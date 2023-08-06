@@ -14,7 +14,7 @@ class Compare(colValueListsA: MutableList<MutableList<Any?>>, colValueListsB: Mu
         this.colValueListsB = colValueListsB
     }
 
-    fun go() {
+    fun start() {
         val tempColValueListsA = colValueListsA.minus(colValueListsB.toSet())
         val tempColValueListsB = colValueListsB.minus(colValueListsA.toSet())
 

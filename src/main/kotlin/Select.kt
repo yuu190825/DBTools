@@ -2,31 +2,26 @@ import java.sql.*
 import java.util.logging.Level
 import java.util.logging.Logger
 
-// SQL Config from Oracle DB
-private const val ORACLE_JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver"
-private const val ORACLE_DB_URL = "jdbc:oracle:thin:@0.0.0.0:1521:test"
-private const val ORACLE_USER = "test"
-private const val ORACLE_PASS = "test"
-
-// SQL Config from SQL Server
-private const val MS_JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-private const val MS_USER = "test"
-private const val MS_PASS = "test"
-
-class Select(dbType: Byte, func: Byte, type: Byte, record: Short, dbName: String, tabName: String, from: Long, to: Long):Thread() {
+class Select(dbType: Byte, dbUrl: String, dbName: String, dbUser: String, dbPass: String, func: Byte, step: Byte,
+             record: Short, tabName: String, from: Long, to: Long):Thread() {
 
     // Parameter Value
     private val dbType: Byte
-    private val func: Byte
-    private val type: Byte
-    private val record: Short
+    private val dbUrl: String
     private val dbName: String
+    private val dbUser: String
+    private val dbPass: String
+    private val func: Byte
+    private val step: Byte
+    private val record: Short
     private val tabName: String
     private val from: Long
     private val to: Long
 
     // Init Value
-    private val logger: Logger
+    private val dbConfig = DbConfig()
+    private val sqlQuery = SqlQuery()
+    private val logger = Logger.getLogger(Select::class.qualifiedName)
 
     // Data Value
     val colNameList = mutableListOf<String>()
@@ -37,15 +32,16 @@ class Select(dbType: Byte, func: Byte, type: Byte, record: Short, dbName: String
 
     init {
         this.dbType = dbType
-        this.func = func
-        this.type = type
-        this.record = record
+        this.dbUrl = dbUrl
         this.dbName = dbName
+        this.dbUser = dbUser
+        this.dbPass = dbPass
+        this.func = func
+        this.step = step
+        this.record = record
         this.tabName = tabName
         this.from = from
         this.to = to
-
-        logger = Logger.getLogger(Select::class.qualifiedName)
     }
 
     override fun run() {
@@ -56,20 +52,15 @@ class Select(dbType: Byte, func: Byte, type: Byte, record: Short, dbName: String
         var rs: ResultSet? = null
 
         try {
-            conn = if (func.toInt() == 1) {
-                Class.forName(ORACLE_JDBC_DRIVER)
-                DriverManager.getConnection(ORACLE_DB_URL, ORACLE_USER, ORACLE_PASS)
-            } else {
-                Class.forName(MS_JDBC_DRIVER)
-                DriverManager.getConnection(dbName, MS_USER, MS_PASS)
-            }
+            Class.forName(dbConfig.getJdbcDriver(dbType))
+            conn = DriverManager.getConnection(dbConfig.getDbUrl(dbType, dbUrl, dbName), dbUser, dbPass)
 
             stmt = conn.createStatement()
 
             // SELECT COLUMN_NAME FROM TABLE
             println("Getting COLUMN_NAME...")
 
-            rs = stmt.executeQuery(SqlQuery().getSelectColumnNameQuery(dbType, tabName))
+            rs = stmt.executeQuery(sqlQuery.getSelectColumnNameQuery(dbType, dbName, tabName))
 
             while (rs.next()) colNameList.add(rs.getString("COLUMN_NAME"))
             // End
@@ -77,12 +68,15 @@ class Select(dbType: Byte, func: Byte, type: Byte, record: Short, dbName: String
             // Check DataType
             println("Checking DataType...")
 
-            rs = stmt.executeQuery(SqlQuery().getSelectOneQuery(dbType, tabName))
+            rs = stmt.executeQuery(sqlQuery.getSelectOneQuery(dbType, tabName))
 
-            for (i in 1 .. rs.metaData.columnCount)
-                if (rs.metaData.getColumnTypeName(i).equals("BLOB") ||
-                    rs.metaData.getColumnTypeName(i).equals("CLOB"))
-                    toDeleteColNameList.add(rs.metaData.getColumnName(i))
+            while (rs.next()) {
+                val metadata = rs.metaData
+                for (i in 1 .. metadata.columnCount)
+                    if (metadata.getColumnTypeName(i).equals("BLOB") ||
+                        metadata.getColumnTypeName(i).equals("CLOB"))
+                        toDeleteColNameList.add(metadata.getColumnName(i))
+            }
 
             for (colName in toDeleteColNameList) colNameList.remove(colName)
             // End
@@ -90,7 +84,7 @@ class Select(dbType: Byte, func: Byte, type: Byte, record: Short, dbName: String
             // SELECT * FROM TABLE
             println("Getting COLUMN_VALUE...")
 
-            rs = stmt.executeQuery(SqlQuery().getSelectAllQuery(dbType, tabName, colNameList[0], from, to))
+            rs = stmt.executeQuery(sqlQuery.getSelectAllQuery(dbType, tabName, colNameList[0], from, to))
 
             while (rs.next()) {
                 val colValueList = mutableListOf<Any?>()
@@ -113,7 +107,7 @@ class Select(dbType: Byte, func: Byte, type: Byte, record: Short, dbName: String
                     }
                 }
                 if (func.toInt() == 1) colValueListsA.add(colValueList)
-                else { if (type.toInt() == 1) colValueListsA.add(colValueList) else colValueListsB.add(colValueList) }
+                else { if (step.toInt() == 1) colValueListsA.add(colValueList) else colValueListsB.add(colValueList) }
                 if (func.toInt() == 1 && colValueListsA.size.toShort() == record) {
                     colValuePackages.add(colValueListsA)
                     colValueListsA = mutableListOf()

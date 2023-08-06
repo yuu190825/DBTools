@@ -1,18 +1,21 @@
 import java.util.logging.Level
 import java.util.logging.Logger
 
-// Main Config
-private const val DEFAULT_MS_DB_NAME = "test"
-
-// SQL Config from SQL Server
-private const val MS_DB_URL_A = "jdbc:sqlserver://0.0.0.0:1433;encrypt=false;databaseName=test2"
-private const val MS_DB_URL_B = "jdbc:sqlserver://0.0.0.0:1433;encrypt=false;databaseName=test"
-
-class Execute(fromDBType: Byte, toDBType: Byte, func: Byte, record: Short, tabName: String, from: Long, to: Long) {
+class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUser: String, fromDbPass: String,
+              toDbType: Byte, toDbUrl: String, toDbName: String, toDbUser: String, toDbPass: String, func: Byte,
+              record: Short, tabName: String, from: Long, to: Long) {
 
     // Parameter Value
-    private val fromDBType: Byte
-    private val toDBType: Byte
+    private val fromDbType: Byte
+    private val fromDbUrl: String
+    private val fromDbName: String
+    private val fromDbUser: String
+    private val fromDbPass: String
+    private val toDbType: Byte
+    private val toDbUrl: String
+    private val toDbName: String
+    private val toDbUser: String
+    private val toDbPass: String
     private val func: Byte
     private val record: Short
     private val tabName: String
@@ -20,23 +23,33 @@ class Execute(fromDBType: Byte, toDBType: Byte, func: Byte, record: Short, tabNa
     private val to: Long
 
     // Init Value
-    private val logger: Logger
+    private val logger = Logger.getLogger(Execute::class.qualifiedName)
+
+    // Data Value
+    val colValueListsA = mutableListOf<MutableList<Any?>>()
+    val colValueListsB = mutableListOf<MutableList<Any?>>()
 
     init {
-        this.fromDBType = fromDBType
-        this.toDBType = toDBType
+        this.fromDbType = fromDbType
+        this.fromDbUrl = fromDbUrl
+        this.fromDbName = fromDbName
+        this.fromDbUser = fromDbUser
+        this.fromDbPass = fromDbPass
+        this.toDbType = toDbType
+        this.toDbUrl = toDbUrl
+        this.toDbName = toDbName
+        this.toDbUser = toDbUser
+        this.toDbPass = toDbPass
         this.func = func
         this.record = record
         this.tabName = tabName
         this.from = from
         this.to = to
 
-        logger = Logger.getLogger(Execute::class.qualifiedName)
-
         println("$tabName from $from to $to")
     }
 
-    fun doTransfer(mode: Byte, dbName: String) {
+    fun start(mode: Byte) {
 
         // Data Value
         val sqlStringPackages = mutableListOf<MutableList<String>>()
@@ -45,91 +58,86 @@ class Execute(fromDBType: Byte, toDBType: Byte, func: Byte, record: Short, tabNa
         val sqlFileWriterList = mutableListOf<SqlFileWriter>()
 
         // Select
-        val selectA = Select(fromDBType, func, 1, record, MS_DB_URL_A, tabName, from, to)
+        val selectA = Select(fromDbType, fromDbUrl, fromDbName, fromDbUser, fromDbPass, func, 1, record, tabName,
+            from, to)
+        val selectB = Select(toDbType, toDbUrl, toDbName, toDbUser, toDbPass, func, 2, record, tabName, from, to)
         
         selectA.start()
+        if (func.toInt() == 2) selectB.start()
 
-        try { selectA.join() } catch (ie: InterruptedException) { logger.log(Level.SEVERE, ie.toString()) }
-        // End
-
-        // SqlStringCreate
-        print("Running SqlStringCreate...")
-        for (clValuePackage in selectA.colValuePackages)
-            sqlStringCreateList.add(SqlStringCreate(tabName, selectA.colNameList, clValuePackage))
-
-        for (sqlStringCreateThread in sqlStringCreateList) sqlStringCreateThread.start()
-
-        println("...")
-        for (sqlStringCreateThread in sqlStringCreateList) {
-            try { sqlStringCreateThread.join() } catch (ie: InterruptedException) {
-                logger.log(Level.SEVERE, ie.toString())
-            }
-
-            sqlStringPackages.add(sqlStringCreateThread.sqlStringList)
+        if (func.toInt() == 1) try { selectA.join() } catch (ie: InterruptedException) {
+            logger.log(Level.SEVERE, ie.toString()) }
+        else {
+            try {
+                selectA.join()
+                selectB.join()
+            } catch (ie: InterruptedException) { logger.log(Level.SEVERE, ie.toString()) }
         }
         // End
 
-        if (mode.toInt() == 2) {
+        if (func.toInt() == 1) {
+            // SqlStringCreate
+            print("Running SqlStringCreate...")
+            for (clValuePackage in selectA.colValuePackages)
+                sqlStringCreateList.add(SqlStringCreate(tabName, selectA.colNameList, clValuePackage))
 
-            // InsertInto
-            print("Running InsertInto...")
-            for (sqlStringListPackage in sqlStringPackages)
-                if (dbName.isNotEmpty()) insertIntoList.add(InsertInto(dbName, sqlStringListPackage))
-                else insertIntoList.add(InsertInto(DEFAULT_MS_DB_NAME, sqlStringListPackage))
-
-            for (insertIntoThread in insertIntoList) insertIntoThread.start()
+            for (sqlStringCreateThread in sqlStringCreateList) sqlStringCreateThread.start()
 
             println("...")
-            for (insertIntoThread in insertIntoList) {
-                try { insertIntoThread.join() } catch (ie: InterruptedException) {
+            for (sqlStringCreateThread in sqlStringCreateList) {
+                try {
+                    sqlStringCreateThread.join()
+                } catch (ie: InterruptedException) {
                     logger.log(Level.SEVERE, ie.toString())
                 }
-            }
-            // Ene
 
-        } else {
-
-            // SqlFileWriter
-            print("Running SqlFileWriter...")
-            for (i in 0 ..< sqlStringPackages.size)
-                sqlFileWriterList.add(SqlFileWriter(tabName, from, to, i + 1,sqlStringPackages[i]))
-
-            for (sqlFileWriterThread in sqlFileWriterList) sqlFileWriterThread.start()
-
-            println("...")
-            for (sqlFileWriterThread in sqlFileWriterList) {
-                try { sqlFileWriterThread.join() } catch (ie: InterruptedException) {
-                    logger.log(Level.SEVERE, ie.toString())
-                }
+                sqlStringPackages.add(sqlStringCreateThread.sqlStringList)
             }
             // End
 
+            if (mode.toInt() == 2) {
+
+                // InsertInto
+                print("Running InsertInto...")
+                for (sqlStringListPackage in sqlStringPackages)
+                    insertIntoList.add(InsertInto(toDbType, toDbUrl, toDbName, toDbUser, toDbPass,
+                        sqlStringListPackage))
+
+                for (insertIntoThread in insertIntoList) insertIntoThread.start()
+
+                println("...")
+                for (insertIntoThread in insertIntoList) {
+                    try {
+                        insertIntoThread.join()
+                    } catch (ie: InterruptedException) {
+                        logger.log(Level.SEVERE, ie.toString())
+                    }
+                }
+                // Ene
+
+            } else {
+
+                // SqlFileWriter
+                print("Running SqlFileWriter...")
+                for (i in 0..<sqlStringPackages.size)
+                    sqlFileWriterList.add(SqlFileWriter(tabName, from, to, i + 1, sqlStringPackages[i]))
+
+                for (sqlFileWriterThread in sqlFileWriterList) sqlFileWriterThread.start()
+
+                println("...")
+                for (sqlFileWriterThread in sqlFileWriterList) {
+                    try {
+                        sqlFileWriterThread.join()
+                    } catch (ie: InterruptedException) {
+                        logger.log(Level.SEVERE, ie.toString())
+                    }
+                }
+                // End
+
+            }
+        } else {
+            colValueListsA.addAll(selectA.colValueListsA)
+            colValueListsB.addAll(selectB.colValueListsB)
         }
-    }
-
-    fun doCompare() {
-
-        // Select
-        val selectA = Select(fromDBType, func, 1, record, MS_DB_URL_A, tabName, from, to)
-        val selectB = Select(toDBType, func, 2, record, MS_DB_URL_B, tabName, from, to)
-
-        selectA.start()
-        selectB.start()
-
-        try {
-            selectA.join()
-            selectB.join()
-        } catch (ie: InterruptedException) { logger.log(Level.SEVERE, ie.toString()) }
-        // End
-
-        // Compare
-        val compare = Compare(selectA.colValueListsA, selectB.colValueListsB)
-        compare.go()
-        // End
-
-        // Writer
-        CsvFileWriter(tabName, compare.notInDBA, compare.addInDBA, compare.xorInDBA).go()
-        // End
-
     }
 }
