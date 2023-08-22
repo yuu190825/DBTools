@@ -41,8 +41,8 @@ class Window {
     private val rdBtnModeOne = JRadioButton("To File")
     private val rdBtnModeTwo = JRadioButton("To DB")
     private val chBoxSetIdInsert = JCheckBox()
-    private val btnTabNameAdd = JButton("Add")
-    private val btnTabNameRemove = JButton("Remove")
+    private val btnAddTabName = JButton("Add")
+    private val btnRemoveTabName = JButton("Remove")
     val btnStart = JButton("Start")
 
     fun print() {
@@ -211,15 +211,15 @@ class Window {
         tabName.setBounds(300, 200, 300, 25)
         panel.add(tabName)
 
-        btnTabNameAdd.setBounds(300, 225, 150, 25)
-        btnTabNameAdd.actionCommand = "Add"
-        btnTabNameAdd.addActionListener(TabNameListControl())
-        panel.add(btnTabNameAdd)
+        btnAddTabName.setBounds(300, 225, 150, 25)
+        btnAddTabName.actionCommand = "Add"
+        btnAddTabName.addActionListener(TabNameListControl())
+        panel.add(btnAddTabName)
 
-        btnTabNameRemove.setBounds(450, 225, 150, 25)
-        btnTabNameRemove.actionCommand = "Remove"
-        btnTabNameRemove.addActionListener(TabNameListControl())
-        panel.add(btnTabNameRemove)
+        btnRemoveTabName.setBounds(450, 225, 150, 25)
+        btnRemoveTabName.actionCommand = "Remove"
+        btnRemoveTabName.addActionListener(TabNameListControl())
+        panel.add(btnRemoveTabName)
 
         val lblTotalRow = JLabel("Total Row:")
         lblTotalRow.setBounds(305, 250, 295, 25)
@@ -246,8 +246,9 @@ class Window {
         rdBtnFuncTwo.isEnabled = false
         rdBtnModeOne.isEnabled = false
         rdBtnModeTwo.isEnabled = false
-        btnTabNameAdd.isEnabled = false
-        btnTabNameRemove.isEnabled = false
+        chBoxSetIdInsert.isEnabled = false
+        btnAddTabName.isEnabled = false
+        btnRemoveTabName.isEnabled = false
         btnStart.isEnabled = false
     }
 
@@ -262,8 +263,9 @@ class Window {
         rdBtnFuncTwo.isEnabled = true
         rdBtnModeOne.isEnabled = true
         rdBtnModeTwo.isEnabled = true
-        btnTabNameAdd.isEnabled = true
-        btnTabNameRemove.isEnabled = true
+        chBoxSetIdInsert.isEnabled = true
+        btnAddTabName.isEnabled = true
+        btnRemoveTabName.isEnabled = true
         btnStart.isEnabled = true
     }
 
