@@ -13,6 +13,7 @@ class Window {
     var toDbType: Byte = 3
     var func: Byte = 1
     var mode: Byte = 1
+    var idInsert = false
     val tabNameList = mutableSetOf<String>()
 
     // Set Value (JTextField)
@@ -39,6 +40,7 @@ class Window {
     private val rdBtnFuncTwo = JRadioButton("Compare")
     private val rdBtnModeOne = JRadioButton("To File")
     private val rdBtnModeTwo = JRadioButton("To DB")
+    private val chBoxSetIdInsert = JCheckBox()
     private val btnTabNameAdd = JButton("Add")
     private val btnTabNameRemove = JButton("Remove")
     val btnStart = JButton("Start")
@@ -187,35 +189,43 @@ class Window {
         rdBtnModeTwo.addActionListener(TransferModeChange())
         panel.add(rdBtnModeTwo)
 
+        chBoxSetIdInsert.setBounds(300, 100, 25, 25)
+        chBoxSetIdInsert.addActionListener(SetIdInsert())
+        panel.add(chBoxSetIdInsert)
+
+        val lblSetIdInsert = JLabel("SET IDENTITY_INSERT ON (To File Only)")
+        lblSetIdInsert.setBounds(325, 100, 270, 25)
+        panel.add(lblSetIdInsert)
+
         val lblRecord = JLabel("Record:")
-        lblRecord.setBounds(305, 100, 295, 25)
+        lblRecord.setBounds(305, 125, 295, 25)
         panel.add(lblRecord)
 
-        record.setBounds(300, 125, 300, 25)
+        record.setBounds(300, 150, 300, 25)
         panel.add(record)
 
         val lblTabName = JLabel("Table Name:")
-        lblTabName.setBounds(305, 150, 295, 25)
+        lblTabName.setBounds(305, 175, 295, 25)
         panel.add(lblTabName)
 
-        tabName.setBounds(300, 175, 300, 25)
+        tabName.setBounds(300, 200, 300, 25)
         panel.add(tabName)
 
-        btnTabNameAdd.setBounds(300, 200, 150, 25)
+        btnTabNameAdd.setBounds(300, 225, 150, 25)
         btnTabNameAdd.actionCommand = "Add"
         btnTabNameAdd.addActionListener(TabNameListControl())
         panel.add(btnTabNameAdd)
 
-        btnTabNameRemove.setBounds(450, 200, 150, 25)
+        btnTabNameRemove.setBounds(450, 225, 150, 25)
         btnTabNameRemove.actionCommand = "Remove"
         btnTabNameRemove.addActionListener(TabNameListControl())
         panel.add(btnTabNameRemove)
 
         val lblTotalRow = JLabel("Total Row:")
-        lblTotalRow.setBounds(305, 225, 295, 25)
+        lblTotalRow.setBounds(305, 250, 295, 25)
         panel.add(lblTotalRow)
 
-        total.setBounds(300, 250, 300, 25)
+        total.setBounds(300, 275, 300, 25)
         panel.add(total)
 
         btnStart.setBounds(300, 475, 300, 25)
@@ -307,14 +317,10 @@ class Window {
                 "Transfer" -> {
                     func = 1
                     rdBtnFuncTwo.isSelected = false
-                    rdBtnModeOne.isEnabled = true
-                    rdBtnModeTwo.isEnabled = true
                 }
                 "Compare" -> {
                     func = 2
                     rdBtnFuncOne.isSelected = false
-                    rdBtnModeOne.isEnabled = false
-                    rdBtnModeTwo.isEnabled = false
                 }
             }
         }
@@ -332,6 +338,12 @@ class Window {
                     rdBtnModeOne.isSelected = false
                 }
             }
+        }
+    }
+
+    private inner class SetIdInsert: ActionListener {
+        override fun actionPerformed(e: ActionEvent?) {
+            idInsert = chBoxSetIdInsert.isSelected
         }
     }
 

@@ -3,7 +3,7 @@ import java.util.logging.Logger
 
 class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUser: String, fromDbPass: String,
               toDbType: Byte, toDbUrl: String, toDbName: String, toDbUser: String, toDbPass: String, func: Byte,
-              record: Short, tabName: String, from: Long, to: Long) {
+              idInsert: Boolean, record: Short, tabName: String, from: Long, to: Long) {
 
     // Parameter Value
     private val fromDbType: Byte
@@ -17,6 +17,7 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
     private val toDbUser: String
     private val toDbPass: String
     private val func: Byte
+    private val idInsert: Boolean
     private val record: Short
     private val tabName: String
     private val from: Long
@@ -40,6 +41,7 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
         this.toDbUser = toDbUser
         this.toDbPass = toDbPass
         this.func = func
+        this.idInsert = idInsert
         this.record = record
         this.tabName = tabName
         this.from = from
@@ -113,7 +115,7 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
                 // SqlFileWriter
                 print("Running SqlFileWriter...")
                 for (i in 0..<sqlStringPackages.size)
-                    sqlFileWriterList.add(SqlFileWriter(tabName, from, to, i + 1, sqlStringPackages[i]))
+                    sqlFileWriterList.add(SqlFileWriter(tabName, from, to, i + 1, idInsert, sqlStringPackages[i]))
 
                 for (sqlFileWriterThread in sqlFileWriterList) sqlFileWriterThread.start()
 

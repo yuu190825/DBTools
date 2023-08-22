@@ -4,7 +4,7 @@ import java.io.IOException
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class SqlFileWriter(tbName: String, from: Long, to: Long, fileNumber: Int,
+class SqlFileWriter(tbName: String, from: Long, to: Long, fileNumber: Int, idInsert: Boolean,
                     sqlStringList: MutableList<String>): Thread() {
 
     // Parameter Value
@@ -12,6 +12,7 @@ class SqlFileWriter(tbName: String, from: Long, to: Long, fileNumber: Int,
     private val from: Long
     private val to: Long
     private val fileNumber: Int
+    private val idInsert: Boolean
     private val sqlStringList: MutableList<String>
 
     private val logger = Logger.getLogger(SqlFileWriter::class.qualifiedName) // Init Value
@@ -21,6 +22,7 @@ class SqlFileWriter(tbName: String, from: Long, to: Long, fileNumber: Int,
         this.from = from
         this.to = to
         this.fileNumber = fileNumber
+        this.idInsert = idInsert
         this.sqlStringList = sqlStringList
     }
 
@@ -33,7 +35,11 @@ class SqlFileWriter(tbName: String, from: Long, to: Long, fileNumber: Int,
             // Writer
             bw = BufferedWriter(FileWriter("${tabName}_${from}_${to}_$fileNumber.sql"))
 
+            if (idInsert) bw.write("SET IDENTITY_INSERT $tabName ON;")
+
             for (sqlString in sqlStringList) bw.write("$sqlString\n")
+
+            if (idInsert) bw.write("SET IDENTITY_INSERT $tabName OFF;")
             // End
 
         } catch (ioe: IOException) { logger.log(Level.SEVERE, ioe.toString())

@@ -39,7 +39,7 @@ private class Start {
                     val execute = Execute(window.fromDbType, window.fromDbUrl.text, window.fromDbName.text,
                         window.fromDbUser.text, String(window.fromDbPass.password), window.toDbType,
                         window.toDbUrl.text, window.toDbName.text, window.toDbUser.text,
-                        String(window.toDbPass.password), window.func, record, tabName, from, to)
+                        String(window.toDbPass.password), window.func, window.idInsert, record, tabName, from, to)
 
                     execute.start(window.mode)
 
