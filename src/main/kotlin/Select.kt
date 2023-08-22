@@ -73,7 +73,8 @@ class Select(dbType: Byte, dbUrl: String, dbName: String, dbUser: String, dbPass
             while (rs.next()) {
                 val metadata = rs.metaData
                 for (i in 1 .. metadata.columnCount) if (metadata.getColumnTypeName(i).equals("BLOB") ||
-                    metadata.getColumnTypeName(i).equals("CLOB")) toDeleteColNameList.add(metadata.getColumnName(i))
+                    metadata.getColumnTypeName(i).equals("CLOB") || metadata.getColumnTypeName(i).equals("timestamp"))
+                    toDeleteColNameList.add(metadata.getColumnName(i))
             }
 
             for (colName in toDeleteColNameList) colNameList.remove(colName)

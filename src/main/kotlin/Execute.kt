@@ -115,7 +115,8 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
                 // SqlFileWriter
                 print("Running SqlFileWriter...")
                 for (i in 0..<sqlStringPackages.size)
-                    sqlFileWriterList.add(SqlFileWriter(tabName, from, to, i + 1, idInsert, sqlStringPackages[i]))
+                    sqlFileWriterList.add(SqlFileWriter(tabName, from, to, i + 1, idInsert,
+                        sqlStringPackages[i]))
 
                 for (sqlFileWriterThread in sqlFileWriterList) sqlFileWriterThread.start()
 
