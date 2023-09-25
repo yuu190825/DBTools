@@ -25,8 +25,8 @@ class Select(dbType: Byte, dbUrl: String, dbSid: String, dbName: String, dbUser:
     private val logger = Logger.getLogger(Select::class.qualifiedName)
 
     // Data Value
-    val colNameList = mutableListOf<String>()
-    private val toDeleteColNameList = mutableListOf<String>()
+    val colNameList = mutableSetOf<String>()
+    private val toDeleteColNameList = mutableSetOf<String>()
     var colValueListsA = mutableListOf<MutableList<Any?>>()
     val colValueListsB = mutableListOf<MutableList<Any?>>()
     val colValuePackages = mutableListOf<MutableList<MutableList<Any?>>>()
@@ -88,7 +88,8 @@ class Select(dbType: Byte, dbUrl: String, dbSid: String, dbName: String, dbUser:
             // SELECT * FROM TABLE
             println("Getting COLUMN_VALUE...")
 
-            rs = stmt.executeQuery(sqlQuery.getSelectAllQuery(dbType, tabName, colNameList[0], from, to))
+            rs = stmt.executeQuery(
+                sqlQuery.getSelectAllQuery(dbType, tabName, colNameList.elementAt(0), from, to))
 
             while (rs.next()) {
                 val colValueList = mutableListOf<Any?>()

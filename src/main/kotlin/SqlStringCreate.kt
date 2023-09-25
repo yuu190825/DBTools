@@ -1,28 +1,28 @@
-class SqlStringCreate(tbName: String, clNameList: MutableList<String>,
-                      clValueLists: MutableList<MutableList<Any?>>): Thread() {
+class SqlStringCreate(tbName: String, colNameList: MutableSet<String>,
+                      colValueLists: MutableList<MutableList<Any?>>): Thread() {
 
     // Parameter Value
     private val tabName: String
-    private val colNameList: MutableList<String>
+    private val colNameList: MutableSet<String>
     private val colValueLists: MutableList<MutableList<Any?>>
 
     val sqlStringList = mutableListOf<String>() // Data Value
 
     init {
         this.tabName = tbName
-        this.colNameList = clNameList
-        this.colValueLists = clValueLists
+        this.colNameList = colNameList
+        this.colValueLists = colValueLists
     }
 
     override fun run() {
-        for (clValueList in colValueLists) {
-            val sqlString = StringBuilder("INSERT INTO $tabName(${colNameList[0]}")
-            for (i in 1 ..< colNameList.size) sqlString.append(", ${colNameList[i]}")
+        for (colValueList in colValueLists) {
+            val sqlString = StringBuilder("INSERT INTO $tabName(${colNameList.elementAt(0)}")
+            for (i in 1 ..< colNameList.size) sqlString.append(", ${colNameList.elementAt(i)}")
 
-            if (clValueList[0] == null) sqlString.append(") VALUES(NULL")
-            else sqlString.append(") VALUES('${clValueList[0]}'")
-            for (i in 1 ..< clValueList.size)
-                if (clValueList[i] == null) sqlString.append(", NULL") else sqlString.append(", '${clValueList[i]}'")
+            if (colValueList[0] == null) sqlString.append(") VALUES(NULL")
+            else sqlString.append(") VALUES('${colValueList[0]}'")
+            for (i in 1 ..< colValueList.size)
+                if (colValueList[i] == null) sqlString.append(", NULL") else sqlString.append(", '${colValueList[i]}'")
 
             sqlStringList.add(sqlString.append(");").toString())
         }
