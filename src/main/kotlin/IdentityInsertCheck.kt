@@ -18,7 +18,7 @@ class IdentityInsertCheck(dbUrl: String, dbName: String, dbUser: String, dbPass:
     // Init Value
     private val dbConfig = DbConfig()
     private val sqlQuery = SqlQuery()
-    private val logger = Logger.getLogger(Select::class.qualifiedName)
+    private val logger = Logger.getLogger(IdentityInsertCheck::class.qualifiedName)
 
     // Data Value
     val tabNameListOut: MutableSet<String>
