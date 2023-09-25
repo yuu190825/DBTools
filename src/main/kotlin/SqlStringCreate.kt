@@ -28,7 +28,7 @@ class SqlStringCreate(tbName: String, clNameList: MutableList<String>,
         }
 
         // DateTime
-        for (sqlString in sqlStringList) sqlString.replace(
+        for (i in 0 ..< sqlStringList.size) sqlStringList[i] = sqlStringList[i].replace(
             "[0-9]{5}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{1,3}".toRegex(),
             "1900-01-01 00:00:00.0")
         // End

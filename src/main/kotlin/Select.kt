@@ -2,12 +2,13 @@ import java.sql.*
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class Select(dbType: Byte, dbUrl: String, dbName: String, dbUser: String, dbPass: String, func: Byte, step: Byte,
-             record: Short, tabName: String, from: Long, to: Long):Thread() {
+class Select(dbType: Byte, dbUrl: String, dbSid: String, dbName: String, dbUser: String, dbPass: String, func: Byte,
+             step: Byte, record: Short, tabName: String, from: Long, to: Long): Thread() {
 
     // Parameter Value
     private val dbType: Byte
     private val dbUrl: String
+    private val dbSid: String
     private val dbName: String
     private val dbUser: String
     private val dbPass: String
@@ -33,6 +34,7 @@ class Select(dbType: Byte, dbUrl: String, dbName: String, dbUser: String, dbPass
     init {
         this.dbType = dbType
         this.dbUrl = dbUrl
+        this.dbSid = dbSid
         this.dbName = dbName
         this.dbUser = dbUser
         this.dbPass = dbPass
@@ -53,7 +55,9 @@ class Select(dbType: Byte, dbUrl: String, dbName: String, dbUser: String, dbPass
 
         try {
             Class.forName(dbConfig.getJdbcDriver(dbType))
-            conn = DriverManager.getConnection(dbConfig.getDbUrl(dbType, dbUrl, dbName), dbUser, dbPass)
+            conn = if (dbType.toInt() == 1)
+                DriverManager.getConnection(dbConfig.getDbUrl(dbType, dbUrl, dbSid), dbUser, dbPass)
+            else DriverManager.getConnection(dbConfig.getDbUrl(dbType, dbUrl, dbName), dbUser, dbPass)
 
             stmt = conn.createStatement()
 
@@ -73,7 +77,7 @@ class Select(dbType: Byte, dbUrl: String, dbName: String, dbUser: String, dbPass
             while (rs.next()) {
                 val metadata = rs.metaData
                 for (i in 1 .. metadata.columnCount) if (metadata.getColumnTypeName(i).equals("BLOB") ||
-                    metadata.getColumnTypeName(i).equals("CLOB") || metadata.getColumnTypeName(i).equals("timestamp") ||
+                    metadata.getColumnTypeName(i).equals("timestamp") ||
                     metadata.getColumnTypeName(i).equals("varbinary"))
                     toDeleteColNameList.add(metadata.getColumnName(i))
             }

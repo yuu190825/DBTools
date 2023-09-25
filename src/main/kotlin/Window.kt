@@ -18,10 +18,12 @@ class Window {
 
     // Set Value (JTextField)
     val fromDbUrl = JTextField()
+    val fromDbSid = JTextField()
     val fromDbName = JTextField()
     val fromDbUser = JTextField()
     val fromDbPass = JPasswordField()
     val toDbUrl = JTextField()
+    val toDbSid = JTextField()
     val toDbName = JTextField()
     val toDbUser = JTextField()
     val toDbPass = JPasswordField()
@@ -43,6 +45,7 @@ class Window {
     private val chBoxSetIdInsert = JCheckBox()
     private val btnAddTabName = JButton("Add")
     private val btnRemoveTabName = JButton("Remove")
+    private val btnClearTabName = JButton("Clear")
     val btnStart = JButton("Start")
 
     fun print() {
@@ -80,11 +83,18 @@ class Window {
         panel.add(rdBtnFromDbTypeThree)
 
         val lblFromDbUrl = JLabel("From DB URL:")
-        lblFromDbUrl.setBounds(5, 50, 295, 25)
+        lblFromDbUrl.setBounds(5, 50, 145, 25)
         panel.add(lblFromDbUrl)
 
-        fromDbUrl.setBounds(0, 75, 300, 25)
+        val lblFromDbSid = JLabel("From DB SID:")
+        lblFromDbSid.setBounds(155, 50, 145, 25)
+        panel.add(lblFromDbSid)
+
+        fromDbUrl.setBounds(0, 75, 150, 25)
         panel.add(fromDbUrl)
+
+        fromDbSid.setBounds(150, 75, 150, 25)
+        panel.add(fromDbSid)
 
         val lblFromDbName = JLabel("From DB Name:")
         lblFromDbName.setBounds(5, 100, 295, 25)
@@ -130,11 +140,18 @@ class Window {
         panel.add(rdBtnToDbTypeThree)
 
         val lblToDbUrl = JLabel("To DB URL:")
-        lblToDbUrl.setBounds(5, 300, 295, 25)
+        lblToDbUrl.setBounds(5, 300, 145, 25)
         panel.add(lblToDbUrl)
 
-        toDbUrl.setBounds(0, 325, 300, 25)
+        val lblToDbSid = JLabel("To DB SID:")
+        lblToDbSid.setBounds(155, 300, 145, 25)
+        panel.add(lblToDbSid)
+
+        toDbUrl.setBounds(0, 325, 150, 25)
         panel.add(toDbUrl)
+
+        toDbSid.setBounds(150, 325, 150, 25)
+        panel.add(toDbSid)
 
         val lblToDbName = JLabel("To DB Name:")
         lblToDbName.setBounds(5, 350, 295, 25)
@@ -211,15 +228,20 @@ class Window {
         tabName.setBounds(300, 200, 300, 25)
         panel.add(tabName)
 
-        btnAddTabName.setBounds(300, 225, 150, 25)
+        btnAddTabName.setBounds(300, 225, 100, 25)
         btnAddTabName.actionCommand = "Add"
         btnAddTabName.addActionListener(TabNameListControl())
         panel.add(btnAddTabName)
 
-        btnRemoveTabName.setBounds(450, 225, 150, 25)
+        btnRemoveTabName.setBounds(400, 225, 100, 25)
         btnRemoveTabName.actionCommand = "Remove"
         btnRemoveTabName.addActionListener(TabNameListControl())
         panel.add(btnRemoveTabName)
+
+        btnClearTabName.setBounds(500, 225, 100, 25)
+        btnClearTabName.actionCommand = "Clear"
+        btnClearTabName.addActionListener(TabNameListControl())
+        panel.add(btnClearTabName)
 
         val lblTotalRow = JLabel("Total Row:")
         lblTotalRow.setBounds(305, 250, 295, 25)
@@ -249,6 +271,7 @@ class Window {
         chBoxSetIdInsert.isEnabled = false
         btnAddTabName.isEnabled = false
         btnRemoveTabName.isEnabled = false
+        btnClearTabName.isEnabled = false
         btnStart.isEnabled = false
     }
 
@@ -266,6 +289,7 @@ class Window {
         chBoxSetIdInsert.isEnabled = true
         btnAddTabName.isEnabled = true
         btnRemoveTabName.isEnabled = true
+        btnClearTabName.isEnabled = true
         btnStart.isEnabled = true
     }
 
@@ -354,6 +378,7 @@ class Window {
             when (e?.actionCommand) {
                 "Add" -> tabNameList.add(tabName.text)
                 "Remove" -> tabNameList.remove(tabName.text)
+                "Clear" -> tabNameList.clear()
             }
 
             println("Table Name List: $tabNameList")

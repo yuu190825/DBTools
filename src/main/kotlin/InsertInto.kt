@@ -43,7 +43,7 @@ class InsertInto(dbType: Byte, dbUrl: String, dbName: String, dbUser: String, db
 
         for (sqlString in sqlStringList) {
             try { stmt?.executeUpdate(sqlString) } // INSERT INTO
-            catch (sqe: SQLException) { logger.log(Level.SEVERE, "$sqe\n$sqlString\n") }
+            catch (sqe: SQLException) { logger.log(Level.WARNING, "$sqe\n$sqlString\n") }
         }
 
         try {

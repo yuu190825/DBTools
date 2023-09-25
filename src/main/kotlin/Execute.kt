@@ -1,18 +1,20 @@
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUser: String, fromDbPass: String,
-              toDbType: Byte, toDbUrl: String, toDbName: String, toDbUser: String, toDbPass: String, func: Byte,
-              idInsert: Boolean, record: Short, tabName: String, from: Long, to: Long) {
+class Execute(fromDbType: Byte, fromDbUrl: String, fromDbSid: String, fromDbName: String, fromDbUser: String,
+              fromDbPass: String, toDbType: Byte, toDbUrl: String, toDbSid: String, toDbName: String, toDbUser: String,
+              toDbPass: String, func: Byte, idInsert: Boolean, record: Short, tabName: String, from: Long, to: Long) {
 
     // Parameter Value
     private val fromDbType: Byte
     private val fromDbUrl: String
+    private val fromDbSid: String
     private val fromDbName: String
     private val fromDbUser: String
     private val fromDbPass: String
     private val toDbType: Byte
     private val toDbUrl: String
+    private val toDbSid: String
     private val toDbName: String
     private val toDbUser: String
     private val toDbPass: String
@@ -32,11 +34,13 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
     init {
         this.fromDbType = fromDbType
         this.fromDbUrl = fromDbUrl
+        this.fromDbSid = fromDbSid
         this.fromDbName = fromDbName
         this.fromDbUser = fromDbUser
         this.fromDbPass = fromDbPass
         this.toDbType = toDbType
         this.toDbUrl = toDbUrl
+        this.toDbSid = toDbSid
         this.toDbName = toDbName
         this.toDbUser = toDbUser
         this.toDbPass = toDbPass
@@ -59,9 +63,10 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
         val sqlFileWriterList = mutableListOf<SqlFileWriter>()
 
         // Select
-        val selectA = Select(fromDbType, fromDbUrl, fromDbName, fromDbUser, fromDbPass, func, 1, record, tabName,
+        val selectA = Select(fromDbType, fromDbUrl, fromDbSid, fromDbName, fromDbUser, fromDbPass, func, 1, record,
+            tabName, from, to)
+        val selectB = Select(toDbType, toDbUrl, toDbSid, toDbName, toDbUser, toDbPass, func, 2, record, tabName,
             from, to)
-        val selectB = Select(toDbType, toDbUrl, toDbName, toDbUser, toDbPass, func, 2, record, tabName, from, to)
         
         selectA.start()
         if (func.toInt() == 2) selectB.start()
@@ -79,13 +84,12 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
         if (func.toInt() == 1) {
 
             // SqlStringCreate
-            print("Running SqlStringCreate...")
+            println("Running SqlStringCreate...")
             for (clValuePackage in selectA.colValuePackages)
                 sqlStringCreateList.add(SqlStringCreate(tabName, selectA.colNameList, clValuePackage))
 
             for (sqlStringCreateThread in sqlStringCreateList) sqlStringCreateThread.start()
 
-            println("...")
             for (sqlStringCreateThread in sqlStringCreateList) {
                 try { sqlStringCreateThread.join() }
                 catch (ie: InterruptedException) { logger.log(Level.SEVERE, ie.toString()) }
@@ -97,13 +101,12 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
             if (mode.toInt() == 2) {
 
                 // InsertInto
-                print("Running InsertInto...")
+                println("Running InsertInto...")
                 for (sqlStringListPackage in sqlStringPackages) insertIntoList.add(InsertInto(toDbType, toDbUrl,
                     toDbName, toDbUser, toDbPass, sqlStringListPackage))
 
                 for (insertIntoThread in insertIntoList) insertIntoThread.start()
 
-                println("...")
                 for (insertIntoThread in insertIntoList) {
                     try { insertIntoThread.join() }
                     catch (ie: InterruptedException) { logger.log(Level.SEVERE, ie.toString()) }
@@ -113,14 +116,13 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbName: String, fromDbUse
             } else {
 
                 // SqlFileWriter
-                print("Running SqlFileWriter...")
-                for (i in 0..<sqlStringPackages.size)
+                println("Running SqlFileWriter...")
+                for (i in 0 ..< sqlStringPackages.size)
                     sqlFileWriterList.add(SqlFileWriter(tabName, from, to, i + 1, idInsert,
                         sqlStringPackages[i]))
 
                 for (sqlFileWriterThread in sqlFileWriterList) sqlFileWriterThread.start()
 
-                println("...")
                 for (sqlFileWriterThread in sqlFileWriterList) {
                     try { sqlFileWriterThread.join() }
                     catch (ie: InterruptedException) { logger.log(Level.SEVERE, ie.toString()) }
