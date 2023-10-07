@@ -24,11 +24,6 @@ private class Start {
         // Data Value
         val colValueListsA = mutableListOf<MutableList<Any?>>()
         val colValueListsB = mutableListOf<MutableList<Any?>>()
-        val toPassTabNameList: MutableSet<String>
-
-        // IdentityInsertCheck Init
-        val identityInsertCheck = IdentityInsertCheck(window.toDbUrl.text, window.toDbName.text, window.toDbUser.text,
-            String(window.toDbPass.password), window.tabNameList)
 
         window.start()
 
@@ -36,17 +31,7 @@ private class Start {
         val total = try { window.total.text.toLong() } catch (nfe: NumberFormatException) { 0 }
 
         if (window.tabNameList.isNotEmpty()) {
-
-            // IdentityInsertCheck
-            print("Running IdentityInsertCheck...")
-            identityInsertCheck.start()
-
-            toPassTabNameList = identityInsertCheck.tabNameListOut
-            // End
-
             for (tabName in window.tabNameList) {
-                if (toPassTabNameList.contains(tabName)) continue
-
                 var from: Long = if (window.fromDbType.toInt() == 3) 0 else 1
                 var to: Long = MAX
 

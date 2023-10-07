@@ -35,7 +35,7 @@ class SqlFileWriter(tbName: String, from: Long, to: Long, fileNumber: Int, idIns
             // Writer
             bw = BufferedWriter(FileWriter("${tabName}_${from}_${to}_$fileNumber.sql"))
 
-            if (idInsert) bw.write("SET IDENTITY_INSERT $tabName ON;")
+            if (idInsert) bw.write("SET IDENTITY_INSERT $tabName ON;\n")
 
             for (sqlString in sqlStringList) bw.write("$sqlString\n")
 
