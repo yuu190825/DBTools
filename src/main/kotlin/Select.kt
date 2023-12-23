@@ -2,22 +2,23 @@ import java.sql.*
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class Select(dbType: Byte, dbUrl: String, dbSid: String, dbName: String, dbUser: String, dbPass: String, func: Byte,
-             step: Byte, record: Short, tabName: String, from: Long, to: Long): Thread() {
+class Select(
 
     // Parameter Value
-    private val dbType: Byte
-    private val dbUrl: String
-    private val dbSid: String
-    private val dbName: String
-    private val dbUser: String
-    private val dbPass: String
-    private val func: Byte
-    private val step: Byte
-    private val record: Short
-    private val tabName: String
-    private val from: Long
+    private val dbType: Byte,
+    private val dbUrl: String,
+    private val dbSid: String,
+    private val dbName: String,
+    private val dbUser: String,
+    private val dbPass: String,
+    private val func: Byte,
+    private val step: Byte,
+    private val record: Short,
+    private val tabName: String,
+    private val from: Long,
     private val to: Long
+
+): Thread() {
 
     // Init Value
     private val dbConfig = DbConfig()
@@ -30,21 +31,6 @@ class Select(dbType: Byte, dbUrl: String, dbSid: String, dbName: String, dbUser:
     var colValueListsA = mutableListOf<MutableList<Any?>>()
     val colValueListsB = mutableListOf<MutableList<Any?>>()
     val colValuePackages = mutableListOf<MutableList<MutableList<Any?>>>()
-
-    init {
-        this.dbType = dbType
-        this.dbUrl = dbUrl
-        this.dbSid = dbSid
-        this.dbName = dbName
-        this.dbUser = dbUser
-        this.dbPass = dbPass
-        this.func = func
-        this.step = step
-        this.record = record
-        this.tabName = tabName
-        this.from = from
-        this.to = to
-    }
 
     override fun run() {
 

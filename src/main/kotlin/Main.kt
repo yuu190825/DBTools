@@ -1,6 +1,5 @@
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.JFrame
 import javax.swing.JOptionPane
 
 // Main Config
@@ -71,7 +70,8 @@ private class Start {
             }
         }
 
-        JOptionPane.showMessageDialog(JFrame(), "ウルトラハッピー")
+        JOptionPane.showMessageDialog(null, "ウルトラハッピー", "Success",
+            JOptionPane.INFORMATION_MESSAGE)
         window.end()
     }
 }

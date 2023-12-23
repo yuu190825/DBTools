@@ -4,27 +4,18 @@ import java.io.IOException
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class SqlFileWriter(tbName: String, from: Long, to: Long, fileNumber: Int, idInsert: Boolean,
-                    sqlStringList: MutableList<String>): Thread() {
+class SqlFileWriter(
 
     // Parameter Value
-    private val tabName: String
-    private val from: Long
-    private val to: Long
-    private val fileNumber: Int
-    private val idInsert: Boolean
+    private val tabName: String,
+    private val from: Long,
+    private val to: Long,
+    private val fileNumber: Int,
+    private val idInsert: Boolean,
     private val sqlStringList: MutableList<String>
 
+): Thread() {
     private val logger = Logger.getLogger(SqlFileWriter::class.qualifiedName) // Init Value
-
-    init {
-        this.tabName = tbName
-        this.from = from
-        this.to = to
-        this.fileNumber = fileNumber
-        this.idInsert = idInsert
-        this.sqlStringList = sqlStringList
-    }
 
     override fun run() {
 

@@ -5,29 +5,21 @@ import java.sql.Statement
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class InsertInto(dbType: Byte, dbUrl: String, dbName: String, dbUser: String, dbPass: String,
-                 sqlStringList: MutableList<String>): Thread() {
+class InsertInto(
 
     // Parameter Value
-    private val dbType: Byte
-    private val dbUrl: String
-    private val dbName: String
-    private val dbUser: String
-    private val dbPass: String
+    private val dbType: Byte,
+    private val dbUrl: String,
+    private val dbName: String,
+    private val dbUser: String,
+    private val dbPass: String,
     private val sqlStringList: MutableList<String>
+
+): Thread() {
 
     // Init Value
     private val dbConfig = DbConfig()
     private val logger = Logger.getLogger(InsertInto::class.qualifiedName)
-
-    init {
-        this.dbType = dbType
-        this.dbUrl = dbUrl
-        this.dbName = dbName
-        this.dbUser = dbUser
-        this.dbPass = dbPass
-        this.sqlStringList = sqlStringList
-    }
 
     override fun run() {
 

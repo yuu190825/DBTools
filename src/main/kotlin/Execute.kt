@@ -1,30 +1,29 @@
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class Execute(fromDbType: Byte, fromDbUrl: String, fromDbSid: String, fromDbName: String, fromDbUser: String,
-              fromDbPass: String, toDbType: Byte, toDbUrl: String, toDbSid: String, toDbName: String, toDbUser: String,
-              toDbPass: String, func: Byte, idInsert: Boolean, record: Short, tabName: String, from: Long, to: Long) {
+class Execute(
 
     // Parameter Value
-    private val fromDbType: Byte
-    private val fromDbUrl: String
-    private val fromDbSid: String
-    private val fromDbName: String
-    private val fromDbUser: String
-    private val fromDbPass: String
-    private val toDbType: Byte
-    private val toDbUrl: String
-    private val toDbSid: String
-    private val toDbName: String
-    private val toDbUser: String
-    private val toDbPass: String
-    private val func: Byte
-    private val idInsert: Boolean
-    private val record: Short
-    private val tabName: String
-    private val from: Long
+    private val fromDbType: Byte,
+    private val fromDbUrl: String,
+    private val fromDbSid: String,
+    private val fromDbName: String,
+    private val fromDbUser: String,
+    private val fromDbPass: String,
+    private val toDbType: Byte,
+    private val toDbUrl: String,
+    private val toDbSid: String,
+    private val toDbName: String,
+    private val toDbUser: String,
+    private val toDbPass: String,
+    private val func: Byte,
+    private val idInsert: Boolean,
+    private val record: Short,
+    private val tabName: String,
+    private val from: Long,
     private val to: Long
 
+) {
     private val logger = Logger.getLogger(Execute::class.qualifiedName) // Init Value
 
     // Data Value
@@ -32,25 +31,6 @@ class Execute(fromDbType: Byte, fromDbUrl: String, fromDbSid: String, fromDbName
     val colValueListsB = mutableListOf<MutableList<Any?>>()
 
     init {
-        this.fromDbType = fromDbType
-        this.fromDbUrl = fromDbUrl
-        this.fromDbSid = fromDbSid
-        this.fromDbName = fromDbName
-        this.fromDbUser = fromDbUser
-        this.fromDbPass = fromDbPass
-        this.toDbType = toDbType
-        this.toDbUrl = toDbUrl
-        this.toDbSid = toDbSid
-        this.toDbName = toDbName
-        this.toDbUser = toDbUser
-        this.toDbPass = toDbPass
-        this.func = func
-        this.idInsert = idInsert
-        this.record = record
-        this.tabName = tabName
-        this.from = from
-        this.to = to
-
         println("$tabName from $from to $to")
     }
 

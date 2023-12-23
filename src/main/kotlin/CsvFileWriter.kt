@@ -4,25 +4,17 @@ import java.io.IOException
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class CsvFileWriter(dbName: String, tabName: String, notInDBA: MutableList<MutableList<Any?>>,
-                    addInDBA: MutableList<MutableList<Any?>>, xorInDBA: MutableList<MutableList<Any?>>) {
+class CsvFileWriter(
 
     // Parameter Value
-    private val dbName: String
-    private val tabName: String
-    private val notInDBA: MutableList<MutableList<Any?>>
-    private val addInDBA: MutableList<MutableList<Any?>>
+    private val dbName: String,
+    private val tabName: String,
+    private val notInDBA: MutableList<MutableList<Any?>>,
+    private val addInDBA: MutableList<MutableList<Any?>>,
     private val xorInDBA: MutableList<MutableList<Any?>>
 
+) {
     private val logger = Logger.getLogger(CsvFileWriter::class.qualifiedName) // Init Value
-
-    init {
-        this.dbName = dbName
-        this.tabName = tabName
-        this.notInDBA = notInDBA
-        this.addInDBA = addInDBA
-        this.xorInDBA = xorInDBA
-    }
 
     fun start() {
 
