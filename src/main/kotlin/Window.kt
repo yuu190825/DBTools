@@ -67,19 +67,19 @@ class Window {
         panel.add(lblFromDbType)
 
         rdBtnFromDbTypeOne.setBounds(0, 25, 100, 25)
-        rdBtnFromDbTypeOne.actionCommand = "Oracle DB"
-        rdBtnFromDbTypeOne.addActionListener(FromDBTypeChange())
+        rdBtnFromDbTypeOne.actionCommand = "from Oracle DB"
+        rdBtnFromDbTypeOne.addActionListener(UnionRadioButtonActionListener())
         panel.add(rdBtnFromDbTypeOne)
 
         rdBtnFromDbTypeTwo.setBounds(100, 25, 100, 25)
-        rdBtnFromDbTypeTwo.actionCommand = "SQL Server"
-        rdBtnFromDbTypeTwo.addActionListener(FromDBTypeChange())
+        rdBtnFromDbTypeTwo.actionCommand = "from SQL Server"
+        rdBtnFromDbTypeTwo.addActionListener(UnionRadioButtonActionListener())
         panel.add(rdBtnFromDbTypeTwo)
 
         rdBtnFromDbTypeThree.setBounds(200, 25, 100, 25)
         rdBtnFromDbTypeThree.isSelected = true
-        rdBtnFromDbTypeThree.actionCommand = "MySQL"
-        rdBtnFromDbTypeThree.addActionListener(FromDBTypeChange())
+        rdBtnFromDbTypeThree.actionCommand = "from MySQL"
+        rdBtnFromDbTypeThree.addActionListener(UnionRadioButtonActionListener())
         panel.add(rdBtnFromDbTypeThree)
 
         val lblFromDbUrl = JLabel("From DB URL:")
@@ -124,19 +124,19 @@ class Window {
         panel.add(lblToDbType)
 
         rdBtnToDbTypeOne.setBounds(0, 275, 100, 25)
-        rdBtnToDbTypeOne.actionCommand = "Oracle DB"
-        rdBtnToDbTypeOne.addActionListener(ToDBTypeChange())
+        rdBtnToDbTypeOne.actionCommand = "to Oracle DB"
+        rdBtnToDbTypeOne.addActionListener(UnionRadioButtonActionListener())
         panel.add(rdBtnToDbTypeOne)
 
         rdBtnToDbTypeTwo.setBounds(100, 275, 100, 25)
-        rdBtnToDbTypeTwo.actionCommand = "SQL Server"
-        rdBtnToDbTypeTwo.addActionListener(ToDBTypeChange())
+        rdBtnToDbTypeTwo.actionCommand = "to SQL Server"
+        rdBtnToDbTypeTwo.addActionListener(UnionRadioButtonActionListener())
         panel.add(rdBtnToDbTypeTwo)
 
         rdBtnToDbTypeThree.setBounds(200, 275, 100, 25)
         rdBtnToDbTypeThree.isSelected = true
-        rdBtnToDbTypeThree.actionCommand = "MySQL"
-        rdBtnToDbTypeThree.addActionListener(ToDBTypeChange())
+        rdBtnToDbTypeThree.actionCommand = "to MySQL"
+        rdBtnToDbTypeThree.addActionListener(UnionRadioButtonActionListener())
         panel.add(rdBtnToDbTypeThree)
 
         val lblToDbUrl = JLabel("To DB URL:")
@@ -183,12 +183,12 @@ class Window {
         rdBtnFuncOne.setBounds(300, 25, 150, 25)
         rdBtnFuncOne.isSelected = true
         rdBtnFuncOne.actionCommand = "Transfer"
-        rdBtnFuncOne.addActionListener(FunctionModeChange())
+        rdBtnFuncOne.addActionListener(UnionRadioButtonActionListener())
         panel.add(rdBtnFuncOne)
 
         rdBtnFuncTwo.setBounds(450, 25, 150, 25)
         rdBtnFuncTwo.actionCommand = "Compare"
-        rdBtnFuncTwo.addActionListener(FunctionModeChange())
+        rdBtnFuncTwo.addActionListener(UnionRadioButtonActionListener())
         panel.add(rdBtnFuncTwo)
 
         val lblMode = JLabel("Transfer Mode:")
@@ -198,12 +198,12 @@ class Window {
         rdBtnModeOne.setBounds(300, 75, 150, 25)
         rdBtnModeOne.isSelected = true
         rdBtnModeOne.actionCommand = "To File"
-        rdBtnModeOne.addActionListener(TransferModeChange())
+        rdBtnModeOne.addActionListener(UnionRadioButtonActionListener())
         panel.add(rdBtnModeOne)
 
         rdBtnModeTwo.setBounds(450, 75, 150, 25)
         rdBtnModeTwo.actionCommand = "To DB"
-        rdBtnModeTwo.addActionListener(TransferModeChange())
+        rdBtnModeTwo.addActionListener(UnionRadioButtonActionListener())
         panel.add(rdBtnModeTwo)
 
         chBoxSetIdInsert.setBounds(300, 100, 25, 25)
@@ -293,76 +293,78 @@ class Window {
         btnStart.isEnabled = true
     }
 
-    private inner class FromDBTypeChange: ActionListener {
+    private inner class UnionRadioButtonActionListener: ActionListener {
         override fun actionPerformed(e: ActionEvent?) {
             when (e?.actionCommand) {
-                "Oracle DB" -> {
+
+                // From DB Type Change
+                "from Oracle DB" -> {
                     fromDbType = 1
+                    rdBtnFromDbTypeOne.isSelected = true
                     rdBtnFromDbTypeTwo.isSelected = false
                     rdBtnFromDbTypeThree.isSelected = false
                 }
-                "SQL Server" -> {
+                "from SQL Server" -> {
                     fromDbType = 2
                     rdBtnFromDbTypeOne.isSelected = false
+                    rdBtnFromDbTypeTwo.isSelected = true
                     rdBtnFromDbTypeThree.isSelected = false
                 }
-                "MySQL" -> {
+                "from MySQL" -> {
                     fromDbType = 3
                     rdBtnFromDbTypeOne.isSelected = false
                     rdBtnFromDbTypeTwo.isSelected = false
+                    rdBtnFromDbTypeThree.isSelected = true
                 }
-            }
-        }
-    }
+                // End
 
-    private inner class ToDBTypeChange: ActionListener {
-        override fun actionPerformed(e: ActionEvent?) {
-            when (e?.actionCommand) {
-                "Oracle DB" -> {
+                // To DB Type Change
+                "to Oracle DB" -> {
                     toDbType = 1
+                    rdBtnToDbTypeOne.isSelected = true
                     rdBtnToDbTypeTwo.isSelected = false
                     rdBtnToDbTypeThree.isSelected = false
                 }
-                "SQL Server" -> {
+                "to SQL Server" -> {
                     toDbType = 2
                     rdBtnToDbTypeOne.isSelected = false
+                    rdBtnToDbTypeTwo.isSelected = true
                     rdBtnToDbTypeThree.isSelected = false
                 }
-                "MySQL" -> {
+                "to MySQL" -> {
                     toDbType = 3
                     rdBtnToDbTypeOne.isSelected = false
                     rdBtnToDbTypeTwo.isSelected = false
+                    rdBtnToDbTypeThree.isSelected = true
                 }
-            }
-        }
-    }
+                // End
 
-    private inner class FunctionModeChange: ActionListener {
-        override fun actionPerformed(e: ActionEvent?) {
-            when (e?.actionCommand) {
+                // Function Mode Change
                 "Transfer" -> {
                     func = 1
+                    rdBtnFuncOne.isSelected = true
                     rdBtnFuncTwo.isSelected = false
                 }
                 "Compare" -> {
                     func = 2
                     rdBtnFuncOne.isSelected = false
+                    rdBtnFuncTwo.isSelected = true
                 }
-            }
-        }
-    }
+                // End
 
-    private inner class TransferModeChange: ActionListener {
-        override fun actionPerformed(e: ActionEvent?) {
-            when (e?.actionCommand) {
+                // Transfer Mode Change
                 "To File" -> {
                     mode = 1
+                    rdBtnModeOne.isSelected = true
                     rdBtnModeTwo.isSelected = false
                 }
                 "To DB" -> {
                     mode = 2
                     rdBtnModeOne.isSelected = false
+                    rdBtnModeTwo.isSelected = true
                 }
+                // End
+
             }
         }
     }

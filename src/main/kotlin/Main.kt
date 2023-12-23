@@ -1,5 +1,7 @@
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import javax.swing.JFrame
+import javax.swing.JOptionPane
 
 // Main Config
 private const val DEFAULT_RECORD: Short = 5000
@@ -69,7 +71,7 @@ private class Start {
             }
         }
 
-        println("ok")
+        JOptionPane.showMessageDialog(JFrame(), "ウルトラハッピー")
         window.end()
     }
 }
