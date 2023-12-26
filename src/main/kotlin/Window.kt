@@ -30,6 +30,7 @@ class Window {
     val record = JTextField()
     val tabName = JTextField()
     val total = JTextField()
+    val where = JTextArea()
 
     // Components
     private val rdBtnFromDbTypeOne = JRadioButton("Oracle DB")
@@ -249,6 +250,13 @@ class Window {
 
         total.setBounds(300, 275, 300, 25)
         panel.add(total)
+
+        val lblQueryConditions = JLabel("Query Conditions:")
+        lblQueryConditions.setBounds(305, 300, 295, 25)
+        panel.add(lblQueryConditions)
+
+        where.setBounds(305, 328, 290, 119)
+        panel.add(where)
 
         btnStart.setBounds(300, 475, 300, 25)
         panel.add(btnStart)

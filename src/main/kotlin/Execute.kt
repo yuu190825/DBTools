@@ -20,6 +20,7 @@ class Execute(
     private val idInsert: Boolean,
     private val record: Short,
     private val tabName: String,
+    private val where: String,
     private val from: Long,
     private val to: Long
 
@@ -44,9 +45,9 @@ class Execute(
 
         // Select
         val selectA = Select(fromDbType, fromDbUrl, fromDbSid, fromDbName, fromDbUser, fromDbPass, func, 1, record,
-            tabName, from, to)
+            tabName, where, from, to)
         val selectB = Select(toDbType, toDbUrl, toDbSid, toDbName, toDbUser, toDbPass, func, 2, record, tabName,
-            from, to)
+            where, from, to)
         
         selectA.start()
         if (func.toInt() == 2) selectB.start()

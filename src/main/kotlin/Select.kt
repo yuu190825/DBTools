@@ -15,6 +15,7 @@ class Select(
     private val step: Byte,
     private val record: Short,
     private val tabName: String,
+    private val where: String,
     private val from: Long,
     private val to: Long
 
@@ -74,8 +75,13 @@ class Select(
             // SELECT * FROM TABLE
             println("Getting COLUMN_VALUE...")
 
+            var finalWhere = ""
+            if (dbType.toInt() == 1) for (colName in colNameList)
+                finalWhere = where.replace(colName, "T.$colName", true)
+            else finalWhere = where
+
             rs = stmt.executeQuery(
-                sqlQuery.getSelectAllQuery(dbType, tabName, colNameList.elementAt(0), from, to))
+                sqlQuery.getSelectAllQuery(dbType, tabName, finalWhere, colNameList.elementAt(0), from, to))
 
             while (rs.next()) {
                 val colValueList = mutableListOf<Any?>()
@@ -92,13 +98,16 @@ class Select(
                         }
                     }
                 }
+
                 if (func.toInt() == 1) colValueListsA.add(colValueList)
                 else { if (step.toInt() == 1) colValueListsA.add(colValueList) else colValueListsB.add(colValueList) }
+
                 if (func.toInt() == 1 && colValueListsA.size.toShort() == record) {
                     colValuePackages.add(colValueListsA)
                     colValueListsA = mutableListOf()
                 }
             }
+
             if (func.toInt() == 1 && colValueListsA.isNotEmpty()) colValuePackages.add(colValueListsA)
             // End
 
