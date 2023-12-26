@@ -15,6 +15,7 @@ class SqlStringCreate(
 
             if (colValueList[0] == null) sqlString.append(") VALUES(NULL")
             else sqlString.append(") VALUES('${colValueList[0]}'")
+
             for (i in 1 ..< colValueList.size)
                 if (colValueList[i] == null) sqlString.append(", NULL") else sqlString.append(", '${colValueList[i]}'")
 
