@@ -255,8 +255,11 @@ class Window {
         lblQueryConditions.setBounds(305, 300, 295, 25)
         panel.add(lblQueryConditions)
 
-        where.setBounds(305, 328, 290, 119)
-        panel.add(where)
+        where.lineWrap = true
+        where.wrapStyleWord = true
+        val jsp = JScrollPane(where)
+        jsp.setBounds(305, 328, 290, 119)
+        panel.add(jsp)
 
         btnStart.setBounds(300, 475, 300, 25)
         panel.add(btnStart)
