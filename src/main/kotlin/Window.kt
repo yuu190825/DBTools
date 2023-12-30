@@ -51,13 +51,10 @@ class Window {
 
     fun print() {
 
-        // Set Window
+        // Set Window & Panel
         window.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         window.title = "DBTools"
         window.setSize(600, 550)
-        // End
-
-        // Set Panel
         panel.layout = null
         window.contentPane = panel
         // End

@@ -1,28 +1,20 @@
 import java.io.BufferedWriter
 import java.io.FileWriter
 import java.io.IOException
-import java.util.logging.Level
-import java.util.logging.Logger
 
 class CsvFileWriter(
-
-    // Parameter Value
     private val dbName: String,
     private val tabName: String,
     private val notInDBA: MutableList<MutableList<Any?>>,
     private val addInDBA: MutableList<MutableList<Any?>>,
     private val xorInDBA: MutableList<MutableList<Any?>>
-
 ) {
-    private val logger = Logger.getLogger(CsvFileWriter::class.qualifiedName) // Init Value
+    var error = false
 
     fun start() {
-
-        var bw: BufferedWriter? = null // BufferedWriter Init
+        var bw: BufferedWriter? = null
 
         try {
-
-            // Writer
             bw = BufferedWriter(FileWriter("$tabName.csv"))
 
             bw.write("Not in $dbName:\n")
@@ -45,9 +37,8 @@ class CsvFileWriter(
                 for (j in 1..< xorInDBA[i].size) bw.write(", ${xorInDBA[i][j].toString()}")
                 bw.newLine()
             }
-            // End
-
-        } catch (ioe: IOException) { logger.log(Level.SEVERE, ioe.toString())
-        } finally { try { bw?.close() } catch (ioe: IOException) { logger.log(Level.SEVERE, ioe.toString()) } }
+        } catch (ioe: IOException) { error = true } finally {
+            try { bw?.close() } catch (ioe: IOException) { error = true }
+        }
     }
 }

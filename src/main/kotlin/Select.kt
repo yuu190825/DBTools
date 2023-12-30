@@ -1,10 +1,6 @@
 import java.sql.*
-import java.util.logging.Level
-import java.util.logging.Logger
 
 class Select(
-
-    // Parameter Value
     private val dbType: Byte,
     private val dbUrl: String,
     private val dbSid: String,
@@ -18,40 +14,31 @@ class Select(
     private val where: String,
     private val from: Long,
     private val to: Long
-
 ): Thread() {
-
-    // Init Value
-    private val dbConfig = DbConfig()
-    private val sqlQuery = SqlQuery()
-    private val logger = Logger.getLogger(Select::class.qualifiedName)
-
-    // Data Value
     val colNameList = mutableSetOf<String>()
     private val toDeleteColNameList = mutableSetOf<String>()
     var colValueListsA = mutableListOf<MutableList<Any?>>()
     val colValueListsB = mutableListOf<MutableList<Any?>>()
     val colValuePackages = mutableListOf<MutableList<MutableList<Any?>>>()
+    var error = false
 
     override fun run() {
-
-        // SQL Init
         var conn: Connection? = null
         var stmt: Statement? = null
         var rs: ResultSet? = null
 
         try {
-            Class.forName(dbConfig.getJdbcDriver(dbType))
-            conn = if (dbType.toInt() == 1)
-                DriverManager.getConnection(dbConfig.getDbUrl(dbType, dbUrl, dbSid), dbUser, dbPass)
-            else DriverManager.getConnection(dbConfig.getDbUrl(dbType, dbUrl, dbName), dbUser, dbPass)
+            Class.forName(DbConfig().getJdbcDriver(dbType))
+            conn = if (dbType.toInt() == 1) DriverManager.getConnection(
+                DbConfig().getDbUrl(dbType, dbUrl, dbSid), dbUser, dbPass)
+            else DriverManager.getConnection(DbConfig().getDbUrl(dbType, dbUrl, dbName), dbUser, dbPass)
 
             stmt = conn.createStatement()
 
             // SELECT COLUMN_NAME FROM TABLE
             println("Getting COLUMN_NAME...")
 
-            rs = stmt.executeQuery(sqlQuery.getSelectColumnNameQuery(dbType, dbName, tabName))
+            rs = stmt.executeQuery(SqlQuery().getSelectColumnNameQuery(dbType, dbName, tabName))
 
             while (rs.next()) colNameList.add(rs.getString("COLUMN_NAME"))
             // End
@@ -59,7 +46,7 @@ class Select(
             // Check DataType
             println("Checking DataType...")
 
-            rs = stmt.executeQuery(sqlQuery.getSelectOneQuery(dbType, tabName))
+            rs = stmt.executeQuery(SqlQuery().getSelectOneQuery(dbType, tabName))
 
             while (rs.next()) {
                 val metadata = rs.metaData
@@ -76,31 +63,29 @@ class Select(
             println("Getting COLUMN_VALUE...")
 
             var finalWhere = ""
-            if (dbType.toInt() == 1) for (colName in colNameList)
-                finalWhere = where.replace(colName, "T.$colName", true)
+            if (dbType.toInt() == 1) for (colName in colNameList) finalWhere = where.replace(colName,
+                "T.$colName", true)
             else finalWhere = where
 
             rs = stmt.executeQuery(
-                sqlQuery.getSelectAllQuery(dbType, tabName, finalWhere, colNameList.elementAt(0), from, to))
+                SqlQuery().getSelectAllQuery(dbType, tabName, finalWhere, colNameList.elementAt(0), from, to))
 
             while (rs.next()) {
                 val colValueList = mutableListOf<Any?>()
                 for (colName in colNameList) {
                     if (func.toInt() == 1) {
-                        try { colValueList.add(rs.getTimestamp(colName)) }
-                        catch (e: Exception) {
+                        try { colValueList.add(rs.getTimestamp(colName)) } catch (e: Exception) {
                             colValueList.add(rs.getString(colName).replace("'", "''")) } // '
                     } else {
-                        if (rs.getObject(colName) == null) colValueList.add("NULL")
-                        else {
-                            try { colValueList.add(rs.getTimestamp(colName)) }
-                            catch (e: Exception) { colValueList.add(rs.getString(colName)) }
+                        if (rs.getObject(colName) == null) colValueList.add("NULL") else {
+                            try { colValueList.add(rs.getTimestamp(colName)) } catch (e: Exception) {
+                                colValueList.add(rs.getString(colName)) }
                         }
                     }
                 }
 
-                if (func.toInt() == 1) colValueListsA.add(colValueList)
-                else { if (step.toInt() == 1) colValueListsA.add(colValueList) else colValueListsB.add(colValueList) }
+                if (func.toInt() == 1) colValueListsA.add(colValueList) else {
+                    if (step.toInt() == 1) colValueListsA.add(colValueList) else colValueListsB.add(colValueList) }
 
                 if (func.toInt() == 1 && colValueListsA.size.toShort() == record) {
                     colValuePackages.add(colValueListsA)
@@ -111,13 +96,12 @@ class Select(
             if (func.toInt() == 1 && colValueListsA.isNotEmpty()) colValuePackages.add(colValueListsA)
             // End
 
-        } catch (e: Exception) { logger.log(Level.SEVERE, e.toString())
-        } finally {
+        } catch (e: Exception) { error = true } finally {
             try {
                 rs?.close()
                 stmt?.close()
                 conn?.close()
-            } catch (sqe: SQLException) { logger.log(Level.SEVERE, sqe.toString()) }
+            } catch (sqe: SQLException) { error = true }
         }
     }
 }

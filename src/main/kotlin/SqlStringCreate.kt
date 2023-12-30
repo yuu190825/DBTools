@@ -1,12 +1,9 @@
 class SqlStringCreate(
-
-    // Parameter Value
     private val tabName: String,
     private val colNameList: MutableSet<String>,
     private val colValueLists: MutableList<MutableList<Any?>>
-
 ): Thread() {
-    val sqlStringList = mutableListOf<String>() // Data Value
+    val sqlStringList = mutableListOf<String>()
 
     override fun run() {
         for (colValueList in colValueLists) {

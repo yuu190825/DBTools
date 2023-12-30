@@ -2,45 +2,41 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.sql.Statement
-import java.util.logging.Level
-import java.util.logging.Logger
 
 class InsertInto(
-
-    // Parameter Value
     private val dbType: Byte,
     private val dbUrl: String,
     private val dbName: String,
     private val dbUser: String,
     private val dbPass: String,
-    private val sqlStringList: MutableList<String>
-
+    private val sqlStringListIn: MutableList<String>
 ): Thread() {
-
-    // Init Value
-    private val dbConfig = DbConfig()
-    private val logger = Logger.getLogger(InsertInto::class.qualifiedName)
+    var warning = 0
+    val sqlStringListOut = mutableListOf<String>()
+    var error = false
 
     override fun run() {
-
-        // SQL Init
         var conn: Connection? = null
         var stmt: Statement? = null
 
         try {
-            Class.forName(dbConfig.getJdbcDriver(dbType))
-            conn = DriverManager.getConnection(dbConfig.getDbUrl(dbType, dbUrl, dbName), dbUser, dbPass)
+            Class.forName(DbConfig().getJdbcDriver(dbType))
+            conn = DriverManager.getConnection(DbConfig().getDbUrl(dbType, dbUrl, dbName), dbUser, dbPass)
             stmt = conn?.createStatement()
-        } catch (e: Exception) { logger.log(Level.SEVERE, e.toString()) }
+        } catch (e: Exception) { error = true }
 
-        for (sqlString in sqlStringList) {
-            try { stmt?.executeUpdate(sqlString) } // INSERT INTO
-            catch (sqe: SQLException) { logger.log(Level.WARNING, "$sqe\n$sqlString\n") }
+        if (!error) {
+            for (sqlString in sqlStringListIn) {
+                try { stmt?.executeUpdate(sqlString) } catch (sqe: SQLException) { // INSERT INTO
+                    warning++
+                    sqlStringListOut.add(sqlString)
+                }
+            }
+
+            try {
+                stmt?.close()
+                conn?.close()
+            } catch (sqe: SQLException) { error = true }
         }
-
-        try {
-            stmt?.close()
-            conn?.close()
-        } catch (sqe: SQLException) { logger.log(Level.SEVERE, sqe.toString()) }
     }
 }
