@@ -8,6 +8,7 @@ class SqlStringCreate(
     override fun run() {
         for (colValueList in colValueLists) {
             val sqlString = StringBuilder("INSERT INTO $tabName(${colNameList.elementAt(0)}")
+
             for (i in 1 ..< colNameList.size) sqlString.append(", ${colNameList.elementAt(i)}")
 
             if (colValueList[0] == null) sqlString.append(") VALUES(NULL")

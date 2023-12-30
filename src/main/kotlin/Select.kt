@@ -32,7 +32,6 @@ class Select(
             conn = if (dbType.toInt() == 1) DriverManager.getConnection(
                 DbConfig().getDbUrl(dbType, dbUrl, dbSid), dbUser, dbPass)
             else DriverManager.getConnection(DbConfig().getDbUrl(dbType, dbUrl, dbName), dbUser, dbPass)
-
             stmt = conn.createStatement()
 
             // SELECT COLUMN_NAME FROM TABLE

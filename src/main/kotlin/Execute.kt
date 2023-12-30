@@ -45,8 +45,7 @@ class Execute(
             try { selectA.join() } catch (ie: InterruptedException) { error = true }
 
             error = selectA.error
-        }
-        else {
+        } else {
             try {
                 selectA.join()
                 selectB.join()
