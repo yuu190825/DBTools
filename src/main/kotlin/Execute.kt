@@ -1,3 +1,5 @@
+import javax.swing.JTextArea
+
 class Execute(
     private val fromDbType: Byte,
     private val fromDbUrl: String,
@@ -17,7 +19,8 @@ class Execute(
     private val tabName: String,
     private val where: String,
     private val from: Long,
-    private val to: Long
+    private val to: Long,
+    private val statusBox: JTextArea
 ) {
     val colValueListsA = mutableListOf<MutableList<Any?>>()
     val colValueListsB = mutableListOf<MutableList<Any?>>()
@@ -25,7 +28,7 @@ class Execute(
     private val errorSqlStringList = mutableListOf<String>()
     var error = false
 
-    init { println("$tabName from $from to $to") }
+    init { statusBox.append("$tabName from $from to $to\n") }
 
     fun start(mode: Byte) {
         val sqlStringPackages = mutableListOf<MutableList<String>>()
@@ -34,9 +37,9 @@ class Execute(
         val sqlFileWriterList = mutableListOf<SqlFileWriter>()
 
         val selectA = Select(fromDbType, fromDbUrl, fromDbSid, fromDbName, fromDbUser, fromDbPass, func, 1,
-            record, tabName, where, from, to)
+            record, tabName, where, from, to, statusBox)
         val selectB = Select(toDbType, toDbUrl, toDbSid, toDbName, toDbUser, toDbPass, func, 2, record, tabName,
-            where, from, to)
+            where, from, to, statusBox)
 
         selectA.start()
         if (func.toInt() == 2) selectB.start()
@@ -56,7 +59,8 @@ class Execute(
 
         if (!error) {
             if (func.toInt() == 1) {
-                println("Running SqlStringCreate...")
+                statusBox.append("Running SqlStringCreate...\n")
+
                 for (clValuePackage in selectA.colValuePackages) sqlStringCreateList.add(
                     SqlStringCreate(tabName, selectA.colNameList, clValuePackage))
 
@@ -70,7 +74,8 @@ class Execute(
 
                 if (!error) {
                     if (mode.toInt() == 2) {
-                        println("Running InsertInto...")
+                        statusBox.append("Running InsertInto...\n")
+
                         for (sqlStringListPackage in sqlStringPackages) insertIntoList.add(
                             InsertInto(toDbType, toDbUrl, toDbName, toDbUser, toDbPass, sqlStringListPackage))
 
@@ -85,7 +90,8 @@ class Execute(
                         }
 
                         if (!error && warning > 0) {
-                            println("Running SqlFileWriter...")
+                            statusBox.append("Running SqlFileWriter...\n")
+
                             val sqlFileWriterThread = SqlFileWriter(tabName, from, to, -1, false,
                                 errorSqlStringList)
 
@@ -94,7 +100,8 @@ class Execute(
                             try { sqlFileWriterThread.join() } catch (ie: InterruptedException) { error = true }
                         }
                     } else {
-                        println("Running SqlFileWriter...")
+                        statusBox.append("Running SqlFileWriter...\n")
+
                         for (i in 0..<sqlStringPackages.size) sqlFileWriterList.add(
                             SqlFileWriter(tabName, from, to, i + 1, idInsert, sqlStringPackages[i]))
 

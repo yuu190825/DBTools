@@ -42,7 +42,7 @@ private class StartButton {
                                 window.fromDbName.text, window.fromDbUser.text, String(window.fromDbPass.password),
                                 window.toDbType, window.toDbUrl.text, window.toDbSid.text, window.toDbName.text,
                                 window.toDbUser.text, String(window.toDbPass.password), window.func, window.idInsert,
-                                record, tabName, window.where.text, from, to)
+                                record, tabName, window.where.text, from, to, window.statusBox)
 
                             execute.start(window.mode)
 

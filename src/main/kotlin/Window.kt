@@ -48,13 +48,14 @@ class Window {
     private val btnRemoveTabName = JButton("Remove")
     private val btnClearTabName = JButton("Clear")
     val btnStart = JButton("Start")
+    val statusBox = JTextArea()
 
     fun print() {
 
         // Set Window & Panel
         window.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         window.title = "DBTools"
-        window.setSize(600, 550)
+        window.setSize(600, 700)
         panel.layout = null
         window.contentPane = panel
         // End
@@ -254,12 +255,21 @@ class Window {
 
         where.lineWrap = true
         where.wrapStyleWord = true
-        val jsp = JScrollPane(where)
-        jsp.setBounds(305, 328, 290, 119)
-        panel.add(jsp)
+        val jspWhere = JScrollPane(where)
+        jspWhere.setBounds(305, 328, 290, 119)
+        panel.add(jspWhere)
 
         btnStart.setBounds(300, 475, 300, 25)
         panel.add(btnStart)
+        // End
+
+        // Set Block 4 (StatusBox)
+        statusBox.isEditable = false
+        statusBox.lineWrap = true
+        statusBox.wrapStyleWord = true
+        val jspStatusBox = JScrollPane(statusBox)
+        jspStatusBox.setBounds(5, 503, 590, 164)
+        panel.add(jspStatusBox)
         // End
 
         window.isVisible = true
@@ -391,7 +401,7 @@ class Window {
                 "Clear" -> tabNameList.clear()
             }
 
-            println("Table Name List: $tabNameList")
+            statusBox.append("Table Name List: $tabNameList\n")
         }
     }
 }

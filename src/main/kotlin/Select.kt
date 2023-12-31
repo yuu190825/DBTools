@@ -1,4 +1,5 @@
 import java.sql.*
+import javax.swing.JTextArea
 
 class Select(
     private val dbType: Byte,
@@ -13,7 +14,8 @@ class Select(
     private val tabName: String,
     private val where: String,
     private val from: Long,
-    private val to: Long
+    private val to: Long,
+    private val statusBox: JTextArea
 ): Thread() {
     val colNameList = mutableSetOf<String>()
     private val toDeleteColNameList = mutableSetOf<String>()
@@ -35,7 +37,7 @@ class Select(
             stmt = conn.createStatement()
 
             // SELECT COLUMN_NAME FROM TABLE
-            println("Getting COLUMN_NAME...")
+            statusBox.append("Getting COLUMN_NAME...\n")
 
             rs = stmt.executeQuery(SqlQuery().getSelectColumnNameQuery(dbType, dbName, tabName))
 
@@ -43,7 +45,7 @@ class Select(
             // End
 
             // Check DataType
-            println("Checking DataType...")
+            statusBox.append("Checking DataType...\n")
 
             rs = stmt.executeQuery(SqlQuery().getSelectOneQuery(dbType, tabName))
 
@@ -59,7 +61,7 @@ class Select(
             // End
 
             // SELECT * FROM TABLE
-            println("Getting COLUMN_VALUE...")
+            statusBox.append("Getting COLUMN_VALUE...\n")
 
             var finalWhere = ""
             if (dbType.toInt() == 1) for (colName in colNameList) finalWhere = where.replace(colName,
